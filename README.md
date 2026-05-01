@@ -163,7 +163,7 @@ Seções previstas:
 
 <div align="center">
 
-**Desenvolvido com 💜 para contribuir com a saúde brasileira**
+**Desenvolvido pensando em contribuir com a saúde brasileira**
 
 *"O diagnóstico precoce muda vidas."*
 
