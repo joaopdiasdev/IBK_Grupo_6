@@ -8,11 +8,11 @@ CORS(app)
 
 def conectar_banco():
     return mysql.connector.connect(
-        host="localhost",
+        host="127.0.0.1",
         user="root",
-        password="",
+        password="root",
         database="banco_ibk",
-        port = 3306
+        port=3306
     )
 
 
