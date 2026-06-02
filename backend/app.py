@@ -9,7 +9,7 @@ def conectar_banco():
     return mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="7Limonad@",
+        password="senha-do-seu-bd",
         database="banco_ibk",
         port=3306
     )
