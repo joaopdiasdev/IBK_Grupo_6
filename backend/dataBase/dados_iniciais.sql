@@ -1,4 +1,4 @@
-USE ibk_grupo_6; -- COLOCAR O NOME CORRETO NA IMPLEMENTAÇÃO.
+USE banco_ibk; -- COLOCAR O NOME CORRETO NA IMPLEMENTAÇÃO.
 
 INSERT INTO Sintoma (descricao, peso_masculino, peso_feminino) VALUES
 ('Deficiência intelectual', 0.32, 0.20),

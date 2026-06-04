@@ -1,0 +1,58 @@
+from flask import Blueprint, jsonify, request
+
+# mudança geral para o projeto ficar mais organizado utilizando MVC
+from models.sintoma_model import buscar_todos_sintomas
+from models.paciente_model import buscar_todos_pacientes
+from models.triagem_model import (
+    buscar_todas_triagens,
+    calcular_score_triagem,
+    gerar_recomendacao
+)
+from models.pessoa_model import buscar_todas_pessoas
+
+# vai guardar agr as rotas, não é mais o app
+rotas = Blueprint("rotas", __name__)
+
+
+@rotas.route("/")
+def index():
+    return jsonify({"status": "Backend rodando"})
+
+
+@rotas.route("/sintomas")
+def listar_sintomas():
+    resultado = buscar_todos_sintomas()
+    return jsonify(resultado)
+
+
+@rotas.route("/pacientes")
+def listar_pacientes():
+    resultado = buscar_todos_pacientes()
+    return jsonify(resultado)
+
+
+@rotas.route("/triagens")
+def listar_triagens():
+    resultado = buscar_todas_triagens()
+    return jsonify(resultado)
+
+@rotas.route("/triagens/calcular", methods=["POST"])
+def calcular_triagem():
+    dados = request.get_json()
+
+    sexo = dados["sexo_referencia_clinica"]
+    sintomas = dados["sintomas"]
+
+    score = calcular_score_triagem(sexo, sintomas)
+    recomendacao = gerar_recomendacao(score)
+
+    return jsonify({
+        "score": score,
+        "recomendacao": recomendacao
+    })
+
+
+@rotas.route("/pessoas")
+def listar_pessoas():
+    resultado = buscar_todas_pessoas()
+    return jsonify(resultado)
