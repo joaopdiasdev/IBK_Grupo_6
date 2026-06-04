@@ -55,3 +55,51 @@ def gerar_recomendacao(score):
         return "ENCAMINHAR_TESTE_GENETICO"
     else:
         return "NAO_ENCAMINHAR"
+
+def salvar_triagem(id_paciente, observacoes, sexo, score, recomendacao, sintomas):
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    # Salva a triagem
+    cursor.execute("""
+        INSERT INTO Triagem (
+            id_paciente_FK,
+            observacoes,
+            sexo_referencia_calculo,
+            data_triagem,
+            score_triagem,
+            recomendacao
+        )
+        VALUES (%s, %s, %s, NOW(), %s, %s)
+    """, (
+        id_paciente,
+        observacoes,
+        sexo,
+        score,
+        recomendacao
+    ))
+
+    # Guarda o id gerado da triagem
+    id_triagem = cursor.lastrowid
+
+    # Salva cada sintoma marcado
+    for id_sintoma in sintomas:
+        cursor.execute("""
+            INSERT INTO Resposta_Sintoma (
+                id_triagem_FK,
+                id_sintoma_FK,
+                resposta
+            )
+            VALUES (%s, %s, %s)
+        """, (
+            id_triagem,
+            id_sintoma,
+            1
+        ))
+
+    conexao.commit()
+
+    cursor.close()
+    conexao.close()
+
+    return id_triagem

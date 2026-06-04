@@ -2,11 +2,16 @@ from flask import Blueprint, jsonify, request
 
 # mudança geral para o projeto ficar mais organizado utilizando MVC
 from models.sintoma_model import buscar_todos_sintomas
-from models.paciente_model import buscar_todos_pacientes
+from models.paciente_model import (
+    buscar_todos_pacientes,
+    cadastrar_paciente
+)
+
 from models.triagem_model import (
     buscar_todas_triagens,
     calcular_score_triagem,
-    gerar_recomendacao
+    gerar_recomendacao,
+    salvar_triagem
 )
 from models.pessoa_model import buscar_todas_pessoas
 
@@ -56,3 +61,45 @@ def calcular_triagem():
 def listar_pessoas():
     resultado = buscar_todas_pessoas()
     return jsonify(resultado)
+
+@rotas.route("/triagens", methods=["POST"])
+def criar_triagem():
+    dados = request.get_json()
+
+    paciente = dados["paciente"]
+    sintomas = dados["sintomas"]
+    observacoes = dados.get("observacoes", "")
+
+    id_paciente = cadastrar_paciente(
+        paciente["nome"],
+        paciente["email"],
+        paciente.get("senha", "123456"),
+        paciente["genero"],
+        paciente["sexo_referencia_clinica"],
+        paciente["data_nascimento"],
+        paciente.get("nome_responsavel")
+    )
+
+    score = calcular_score_triagem(
+        paciente["sexo_referencia_clinica"],
+        sintomas
+    )
+
+    recomendacao = gerar_recomendacao(score)
+
+    id_triagem = salvar_triagem(
+        id_paciente,
+        observacoes,
+        paciente["sexo_referencia_clinica"],
+        score,
+        recomendacao,
+        sintomas
+    )
+
+    return jsonify({
+        "mensagem": "Triagem cadastrada com sucesso",
+        "id_paciente": id_paciente,
+        "id_triagem": id_triagem,
+        "score": score,
+        "recomendacao": recomendacao
+    })
