@@ -103,3 +103,97 @@ def salvar_triagem(id_paciente, observacoes, sexo, score, recomendacao, sintomas
     conexao.close()
 
     return id_triagem
+
+def buscar_triagem_por_id(id_triagem):
+    conexao = conectar_banco()
+    cursor = conexao.cursor(dictionary=True)
+
+    # Busca dados da triagem e do paciente
+    cursor.execute("""
+        SELECT
+            t.id_triagem,
+            t.data_triagem,
+            t.observacoes,
+            t.score_triagem,
+            t.recomendacao,
+            t.sexo_referencia_calculo,
+
+            p.id_paciente,
+            p.genero,
+            p.data_nascimento,
+            p.nome_responsavel,
+
+            pe.nome,
+            pe.email
+
+        FROM Triagem t
+
+        JOIN Paciente p
+            ON t.id_paciente_FK = p.id_paciente
+
+        JOIN Pessoa pe
+            ON p.id_pessoa_FK = pe.id_pessoa
+
+        WHERE t.id_triagem = %s
+    """, (id_triagem,))
+
+    triagem = cursor.fetchone()
+
+    if not triagem:
+        cursor.close()
+        conexao.close()
+        return None
+
+    # Busca sintomas da triagem
+    cursor.execute("""
+        SELECT
+            s.id_sintoma,
+            s.descricao
+
+        FROM Resposta_Sintoma rs
+
+        JOIN Sintoma s
+            ON rs.id_sintoma_FK = s.id_sintoma
+
+        WHERE rs.id_triagem_FK = %s
+    """, (id_triagem,))
+
+    sintomas = cursor.fetchall()
+
+    triagem["sintomas"] = sintomas
+
+    cursor.close()
+    conexao.close()
+
+    return triagem
+
+def buscar_historico_triagens():
+    conexao = conectar_banco()
+    cursor = conexao.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            t.id_triagem,
+            t.data_triagem,
+            t.score_triagem,
+            t.recomendacao,
+
+            pe.nome
+
+        FROM Triagem t
+
+        JOIN Paciente p
+            ON t.id_paciente_FK = p.id_paciente
+
+        JOIN Pessoa pe
+            ON p.id_pessoa_FK = pe.id_pessoa
+
+        ORDER BY t.data_triagem DESC
+    """)
+
+    resultado = cursor.fetchall()
+
+    cursor.close()
+    conexao.close()
+
+    return resultado

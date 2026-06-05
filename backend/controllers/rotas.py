@@ -11,8 +11,11 @@ from models.triagem_model import (
     buscar_todas_triagens,
     calcular_score_triagem,
     gerar_recomendacao,
-    salvar_triagem
+    salvar_triagem,
+    buscar_triagem_por_id,
+    buscar_historico_triagens
 )
+
 from models.pessoa_model import buscar_todas_pessoas
 
 # vai guardar agr as rotas, não é mais o app
@@ -35,10 +38,16 @@ def listar_pacientes():
     resultado = buscar_todos_pacientes()
     return jsonify(resultado)
 
+@rotas.route("/pessoas")
+def listar_pessoas():
+    resultado = buscar_todas_pessoas()
+    return jsonify(resultado)
+
+
 
 @rotas.route("/triagens")
 def listar_triagens():
-    resultado = buscar_todas_triagens()
+    resultado = buscar_historico_triagens()
     return jsonify(resultado)
 
 @rotas.route("/triagens/calcular", methods=["POST"])
@@ -56,19 +65,33 @@ def calcular_triagem():
         "recomendacao": recomendacao
     })
 
+@rotas.route("/triagens/<int:id_triagem>")
+def buscar_triagem(id_triagem):
 
-@rotas.route("/pessoas")
-def listar_pessoas():
-    resultado = buscar_todas_pessoas()
+    resultado = buscar_triagem_por_id(id_triagem)
+
+    if resultado is None:
+        return jsonify({
+            "erro": "Triagem não encontrada"
+        }), 404
+
     return jsonify(resultado)
 
 @rotas.route("/triagens", methods=["POST"])
 def criar_triagem():
+
     dados = request.get_json()
 
     paciente = dados["paciente"]
+
+    if not paciente.get("nome"):
+        return jsonify({
+            "erro": "Nome é obrigatório"
+        }), 400
+
     sintomas = dados["sintomas"]
     observacoes = dados.get("observacoes", "")
+
 
     id_paciente = cadastrar_paciente(
         paciente["nome"],
