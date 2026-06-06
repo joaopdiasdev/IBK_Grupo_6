@@ -126,3 +126,37 @@ def criar_triagem():
         "score": score,
         "recomendacao": recomendacao
     })
+
+@rotas.route("/login", methods=["POST"])
+def login():
+    dados = request.get_json()
+
+    email = dados.get("email")
+    senha = dados.get("senha")
+
+    if not email or not senha:
+        return jsonify({"erro": "Email e senha são obrigatórios"}), 400
+
+    from dataBase.conexao import conectar_banco
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT id_pessoa, nome, email, is_admin
+        FROM Pessoa
+        WHERE email = %s AND senha = %s
+    """, (email, senha))
+
+    usuario = cursor.fetchone()
+
+    cursor.close()
+    conexao.close()
+
+    if usuario is None:
+        return jsonify({"erro": "Credenciais inválidas"}), 401
+
+    return jsonify({
+        "mensagem": "Login realizado com sucesso",
+        "usuario": usuario
+    })
