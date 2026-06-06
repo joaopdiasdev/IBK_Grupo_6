@@ -7,58 +7,74 @@ function FormPaciente({ paciente, setPaciente }) {
   };
 
   return (
-    <div>
-      <h3>Dados do Paciente</h3>
+    <div className="form-paciente">
+      <div className="form-grupo">
+        <label>Nome</label>
+        <input
+          name="nome"
+          placeholder="Digite o nome"
+          value={paciente.nome || ""}
+          onChange={handleChange}
+        />
+      </div>
 
-      <input
-        name="nome"
-        placeholder="Nome"
-        value={paciente.nome || ""}
-        onChange={handleChange}
-      />
+      <div className="form-grupo">
+        <label>Email</label>
+        <input
+          name="email"
+          placeholder="Digite o email"
+          value={paciente.email || ""}
+          onChange={handleChange}
+        />
+      </div>
 
-      <input
-        name="email"
-        placeholder="Email"
-        value={paciente.email || ""}
-        onChange={handleChange}
-      />
+      <div className="form-grupo">
+        <label>Data de nascimento</label>
+        <input
+          name="data_nascimento"
+          type="date"
+          value={paciente.data_nascimento || ""}
+          onChange={handleChange}
+        />
+      </div>
 
-      <input
-        name="data_nascimento"
-        type="date"
-        value={paciente.data_nascimento || ""}
-        onChange={handleChange}
-      />
+      <div className="form-grupo">
+        <label>Gênero</label>
+        <select
+          name="genero"
+          value={paciente.genero || ""}
+          onChange={handleChange}
+        >
+          <option value="">Selecione o gênero</option>
+          <option value="MASCULINO">Masculino</option>
+          <option value="FEMININO">Feminino</option>
+          <option value="OUTRO">Outro</option>
+          <option value="PREFERE_NAO_INFORMAR">Prefere não informar</option>
+        </select>
+      </div>
 
-      <select
-        name="genero"
-        value={paciente.genero || ""}
-        onChange={handleChange}
-      >
-        <option value="">Selecione o gênero</option>
-        <option value="MASCULINO">Masculino</option>
-        <option value="FEMININO">Feminino</option>
-        <option value="OUTRO">Outro</option>
-        <option value="PREFERE_NAO_INFORMAR">Prefere não informar</option>
-      </select>
+      <div className="form-grupo">
+        <label>Sexo de referência clínica</label>
+        <select
+          name="sexo_referencia_clinica"
+          value={paciente.sexo_referencia_clinica || ""}
+          onChange={handleChange}
+        >
+          <option value="">Selecione</option>
+          <option value="M">Masculino</option>
+          <option value="F">Feminino</option>
+        </select>
+      </div>
 
-      <select
-        name="sexo_referencia_clinica"
-        value={paciente.sexo_referencia_clinica || ""}
-        onChange={handleChange}
-      >
-        <option value="">Sexo de referência clínica</option>
-        <option value="M">Masculino</option>
-        <option value="F">Feminino</option>
-      </select>
-
-      <input
-        name="nome_responsavel"
-        placeholder="Nome do responsável"
-        value={paciente.nome_responsavel || ""}
-        onChange={handleChange}
-      />
+      <div className="form-grupo">
+        <label>Nome do responsável</label>
+        <input
+          name="nome_responsavel"
+          placeholder="Digite o nome do responsável"
+          value={paciente.nome_responsavel || ""}
+          onChange={handleChange}
+        />
+      </div>
     </div>
   );
 }

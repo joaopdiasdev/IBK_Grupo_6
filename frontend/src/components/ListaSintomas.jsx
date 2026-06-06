@@ -24,34 +24,20 @@ function ListaSintomas({
   };
 
   return (
-    <div>
+    <div className="lista-sintomas-container">
+      <div className="lista-sintomas">
+        {sintomas.map(sintoma => (
+          <label className="sintoma-item" key={sintoma.id_sintoma}>
+            <input
+              type="checkbox"
+              checked={sintomasSelecionados.includes(sintoma.id_sintoma)}
+              onChange={() => toggleSintoma(sintoma.id_sintoma)}
+            />
 
-      <h3>Sintomas</h3>
-
-      {sintomas.map(sintoma => (
-
-        <div key={sintoma.id_sintoma}>
-
-          <input
-            type="checkbox"
-            checked={
-              sintomasSelecionados.includes(
-                sintoma.id_sintoma
-              )
-            }
-            onChange={() =>
-              toggleSintoma(
-                sintoma.id_sintoma
-              )
-            }
-          />
-
-          {sintoma.descricao}
-
-        </div>
-
-      ))}
-
+            <span>{sintoma.descricao}</span>
+          </label>
+        ))}
+      </div>
     </div>
   );
 }
