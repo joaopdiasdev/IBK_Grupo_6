@@ -1,0 +1,210 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", Arial, sans-serif;
+    background-color: #f4f7fb;
+}
+
+/* Layout */
+
+.cadastro-page {
+    min-height: 100vh;
+    display: flex;
+    background-color: #f4f7fb;
+    font-family: "Inter", Arial, sans-serif;
+}
+
+/* Sidebar */
+
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background-color: #202b5c;
+    color: white;
+    padding: 28px 16px 24px 16px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-item {
+    padding: 10px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar-item:hover {
+    background-color: #31458a;
+}
+
+.sidebar-item.active {
+    background-color: #31458a;
+}
+
+.sidebar-logo {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.sidebar-logo img {
+    width: 150px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Conteúdo */
+
+.cadastro-content {
+    flex: 1;
+    min-height: 100vh;
+    margin-left: 200px;
+    background-color: #f4f7fb;
+    padding: 72px 64px 48px 64px;
+}
+
+.cadastro-area {
+    max-width: 1050px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.cadastro-titulo {
+    margin-bottom: 28px;
+}
+
+.cadastro-titulo h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #111827;
+}
+
+.cadastro-titulo p {
+    margin-top: 8px;
+    font-size: 15px;
+    color: #6b7280;
+}
+
+/* Card */
+
+.cadastro-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+.cadastro-card-header {
+    margin-bottom: 28px;
+}
+
+.cadastro-card-header h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.cadastro-card-header p {
+    margin-top: 8px;
+    font-size: 14px;
+    color: #6b7280;
+}
+
+/* Form */
+
+.form-profissional {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px 24px;
+}
+
+.form-grupo {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.form-grupo label {
+    font-size: 14px;
+    font-weight: 600;
+    color: #374151;
+}
+
+.form-grupo input,
+.form-grupo select {
+    height: 44px;
+    border: 1px solid #d1d5db;
+    border-radius: 10px;
+    padding: 0 12px;
+    font-family: inherit;
+    font-size: 14px;
+    color: #111827;
+    background-color: #ffffff;
+    outline: none;
+}
+
+.form-grupo input:focus,
+.form-grupo select:focus {
+    border-color: #202b5c;
+    box-shadow: 0 0 0 3px rgba(32, 43, 92, 0.12);
+}
+
+/* Footer */
+
+.cadastro-footer {
+    grid-column: span 2;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    border-top: 1px solid #e5e7eb;
+    padding-top: 24px;
+    margin-top: 8px;
+}
+
+.cadastro-footer p {
+    margin: 0;
+    color: #374151;
+    font-size: 14px;
+}
+
+.btn-cadastrar {
+    border: none;
+    background-color: #202b5c;
+    color: white;
+    padding: 12px 24px;
+    border-radius: 10px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-cadastrar:hover {
+    background-color: #31458a;
+}
