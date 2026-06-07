@@ -4,6 +4,8 @@ import Home from "./pages/Home";
 import NovaTriagem from "./pages/NovaTriagem";
 import ResultadoTriagem from "./pages/ResultadoTriagem";
 import HistoricoTriagem from "./pages/HistoricoTriagem";
+import Pacientes from "./pages/Pacientes";
+import CadastroProfissional from "./pages/CadastroProfissional";
 
 function App() {
   return (
@@ -25,7 +27,18 @@ function App() {
           path="/historico"
           element={<HistoricoTriagem />}
         />
+
+        <Route path="/pacientes" 
+        element={<Pacientes />} 
+        />
+
+        <Route path="/cadastro-profissional" 
+        element={<CadastroProfissional />} 
+        />
+
       </Routes>
+
+
     </BrowserRouter>
   );
 }

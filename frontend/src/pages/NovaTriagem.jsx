@@ -22,27 +22,28 @@ function NovaTriagem() {
   const [observacoes, setObservacoes] = useState("");
 
   useEffect(() => {
+  const usuario = localStorage.getItem("usuario");
+
+  if (!usuario) {
+    navigate("/");
+    return;
+  }
 
   async function carregarSintomas() {
-
     try {
-
       const resposta = await api.get("/sintomas");
-
       setSintomas(resposta.data);
-
     } catch (erro) {
-
       console.error("Erro ao buscar sintomas:", erro);
-
     }
-
   }
 
   carregarSintomas();
+}, [navigate]);
 
-}, []);
-  const salvarTriagem = async () => {
+
+  
+const salvarTriagem = async () => {
   try {
     const resposta = await api.post("/triagens", {
       paciente,

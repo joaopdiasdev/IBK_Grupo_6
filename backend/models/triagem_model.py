@@ -177,6 +177,7 @@ def buscar_historico_triagens():
             t.data_triagem,
             t.score_triagem,
             t.recomendacao,
+            t.observacoes,
 
             pe.nome
 

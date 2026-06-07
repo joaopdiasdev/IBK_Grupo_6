@@ -1,4 +1,5 @@
 from flask import Blueprint, jsonify, request
+from models.profissional_model import cadastrar_profissional
 
 # mudança geral para o projeto ficar mais organizado utilizando MVC
 from models.sintoma_model import buscar_todos_sintomas
@@ -159,4 +160,27 @@ def login():
     return jsonify({
         "mensagem": "Login realizado com sucesso",
         "usuario": usuario
+    })
+@rotas.route("/profissionais", methods=["POST"])
+def criar_profissional():
+    dados = request.get_json()
+
+    nome = dados.get("nome")
+    email = dados.get("email")
+    senha = dados.get("senha")
+    especialidade = dados.get("especialidade")
+
+    if not nome or not email or not senha or not especialidade:
+        return jsonify({"erro": "Todos os campos são obrigatórios"}), 400
+
+    id_profissional = cadastrar_profissional(
+        nome,
+        email,
+        senha,
+        especialidade
+    )
+
+    return jsonify({
+        "mensagem": "Profissional cadastrado com sucesso",
+        "id_profissional": id_profissional
     })

@@ -4,7 +4,21 @@ def buscar_todos_pacientes():
     conexao = conectar_banco()
     cursor = conexao.cursor(dictionary=True)
 
-    cursor.execute("SELECT * FROM Paciente")
+    cursor.execute("""
+        SELECT
+            p.id_paciente,
+            pe.nome,
+            pe.email,
+            p.genero,
+            p.sexo_referencia_clinica,
+            p.data_nascimento,
+            p.nome_responsavel
+        FROM Paciente p
+        JOIN Pessoa pe
+            ON p.id_pessoa_FK = pe.id_pessoa
+        ORDER BY pe.nome
+    """)
+
     resultado = cursor.fetchall()
 
     cursor.close()
