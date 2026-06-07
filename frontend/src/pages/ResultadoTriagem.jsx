@@ -59,9 +59,9 @@ function ResultadoTriagem() {
             <span>Pacientes</span>
           </Link>
 
-          <Link to="/resultado" className="sidebar-item active">
+          <Link to="/historico" className="sidebar-item">
             <FaClipboardList />
-            <span>Resultados</span>
+            <span>Histórico</span>
           </Link>
 
           <Link to="/nova-triagem" className="sidebar-item">

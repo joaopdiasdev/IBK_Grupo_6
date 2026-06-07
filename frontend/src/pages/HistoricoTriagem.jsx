@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { FaUserInjured, FaClipboardList, FaNotesMedical } from "react-icons/fa";
 import api from "../services/api";
+import logoInstituto from "../assets/logo-IBK-branco.png";
+import "./HistoricoTriagem.css";
 
 function formatarData(data) {
   return new Date(data).toLocaleDateString("pt-BR");
@@ -30,64 +34,103 @@ function HistoricoTriagem() {
   }, []);
 
   return (
-    <div>
-      <h1>Histórico de Triagens</h1>
+    <div className="historico-page">
+      <aside className="sidebar">
+        <div className="sidebar-menu">
+          <Link to="/pacientes" className="sidebar-item">
+            <FaUserInjured />
+            <span>Pacientes</span>
+          </Link>
 
-      <table border="1">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Paciente</th>
-            <th>Data</th>
-            <th>Hora</th>
-            <th>Score</th>
-            <th>Recomendação</th>
-            <th>Observações</th>
-          </tr>
-        </thead>
+          <Link to="/historico" className="sidebar-item active">
+            <FaClipboardList />
+            <span>Histórico</span>
+          </Link>
 
-        <tbody>
-          {triagens.map((triagem) => (
-            <>
-              <tr key={triagem.id_triagem}>
-                <td>{triagem.id_triagem}</td>
-                <td>{triagem.nome}</td>
-                <td>{formatarData(triagem.data_triagem)}</td>
-                <td>{formatarHora(triagem.data_triagem)}</td>
-                <td>{triagem.score_triagem}</td>
-                <td>{triagem.recomendacao}</td>
-                <td>
-                  <button
-                    onClick={() =>
-                      setTriagemAberta(
-                        triagemAberta === triagem.id_triagem
-                          ? null
-                          : triagem.id_triagem
-                      )
-                    }
-                  >
-                    {triagemAberta === triagem.id_triagem
-                      ? "Ocultar"
-                      : "Visualizar"}
-                  </button>
-                </td>
-              </tr>
+          <Link to="/nova-triagem" className="sidebar-item">
+            <FaNotesMedical />
+            <span>Triagem</span>
+          </Link>
+        </div>
 
-              {triagemAberta === triagem.id_triagem && (
-                <tr>
-                  <td colSpan="6">
-                    <strong>Observações:</strong>
-                    <p>
-                      {triagem.observacoes ||
-                        "Nenhuma observação registrada."}
-                    </p>
-                  </td>
-                </tr>
-              )}
-            </>
-          ))}
-        </tbody>
-      </table>
+        <div className="sidebar-logo">
+          <img src={logoInstituto} alt="Logo Instituto" />
+        </div>
+      </aside>
+
+      <main className="historico-content">
+        <section className="historico-area">
+          <div className="historico-titulo">
+            <h1>HISTÓRICO</h1>
+            <p>Consulte as triagens já realizadas no sistema.</p>
+          </div>
+
+          <div className="historico-card">
+            {triagens.length === 0 ? (
+              <p className="historico-vazio">Nenhuma triagem registrada.</p>
+            ) : (
+              <div className="tabela-wrapper">
+                <table className="historico-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Paciente</th>
+                      <th>Data</th>
+                      <th>Hora</th>
+                      <th>Score</th>
+                      <th>Recomendação</th>
+                      <th>Observações</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {triagens.map((triagem) => (
+                      <>
+                        <tr key={triagem.id_triagem}>
+                          <td>{triagem.id_triagem}</td>
+                          <td className="nome-paciente">{triagem.nome}</td>
+                          <td>{formatarData(triagem.data_triagem)}</td>
+                          <td>{formatarHora(triagem.data_triagem)}</td>
+                          <td>{triagem.score_triagem}</td>
+                          <td>{triagem.recomendacao}</td>
+                          <td>
+                            <button
+                              className="btn-observacoes"
+                              onClick={() =>
+                                setTriagemAberta(
+                                  triagemAberta === triagem.id_triagem
+                                    ? null
+                                    : triagem.id_triagem
+                                )
+                              }
+                            >
+                              {triagemAberta === triagem.id_triagem
+                                ? "Ocultar"
+                                : "Visualizar"}
+                            </button>
+                          </td>
+                        </tr>
+
+                        {triagemAberta === triagem.id_triagem && (
+                          <tr className="linha-observacoes">
+                            <td colSpan="7">
+                              <strong>Observações:</strong>
+                              <p>
+                                {triagem.observacoes ||
+                                  "Nenhuma observação registrada."}
+                              </p>
+                            </td>
+                          </tr>
+                        )}
+                      </>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
+          </div>
+        </section>
+      </main>
     </div>
   );
 }

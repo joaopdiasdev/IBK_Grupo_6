@@ -1,0 +1,211 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", Arial, sans-serif;
+    background-color: #f4f7fb;
+}
+
+/* Layout */
+
+.historico-page {
+    min-height: 100vh;
+    display: flex;
+    background-color: #f4f7fb;
+    font-family: "Inter", Arial, sans-serif;
+}
+
+/* Sidebar */
+
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background-color: #202b5c;
+    color: white;
+    padding: 28px 16px 24px 16px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-item {
+    padding: 10px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar-item:hover {
+    background-color: #31458a;
+}
+
+.sidebar-item.active {
+    background-color: #31458a;
+}
+
+.sidebar-logo {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.sidebar-logo img {
+    width: 150px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Conteúdo */
+
+.historico-content {
+    flex: 1;
+    min-height: 100vh;
+    margin-left: 200px;
+    background-color: #f4f7fb;
+    padding: 72px 64px 48px 64px;
+}
+
+.historico-area {
+    max-width: 1050px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.historico-titulo {
+    margin-bottom: 28px;
+}
+
+.historico-titulo h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #111827;
+}
+
+.historico-titulo p {
+    margin-top: 8px;
+    font-size: 15px;
+    color: #6b7280;
+}
+
+/* Card e tabela */
+
+.historico-card {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+.tabela-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.historico-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 900px;
+}
+
+.historico-table thead {
+    background-color: #202b5c;
+    color: #ffffff;
+}
+
+.historico-table th {
+    padding: 14px 16px;
+    text-align: left;
+    font-size: 14px;
+    font-weight: 700;
+    letter-spacing: 0.2px;
+}
+
+.historico-table th:first-child {
+    border-top-left-radius: 10px;
+}
+
+.historico-table th:last-child {
+    border-top-right-radius: 10px;
+}
+
+.historico-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    color: #374151;
+    font-size: 14px;
+    font-weight: 400;
+}
+
+.historico-table tbody tr:hover {
+    background-color: #eef2ff;
+}
+
+.nome-paciente {
+    font-weight: 700;
+    color: #111827;
+}
+
+.btn-observacoes {
+    border: none;
+    background-color: #202b5c;
+    color: white;
+    padding: 8px 14px;
+    border-radius: 8px;
+    font-size: 13px;
+    font-weight: 700;
+    cursor: pointer;
+    font-family: inherit;
+}
+
+.btn-observacoes:hover {
+    background-color: #31458a;
+}
+
+.linha-observacoes td {
+    background-color: #f9fafb;
+    padding: 18px 20px;
+}
+
+.linha-observacoes strong {
+    color: #111827;
+    font-size: 14px;
+}
+
+.linha-observacoes p {
+    margin: 8px 0 0 0;
+    color: #374151;
+    font-size: 14px;
+    line-height: 1.5;
+}
+
+.historico-vazio {
+    text-align: center;
+    color: #6b7280;
+    padding: 32px;
+    font-size: 15px;
+}
