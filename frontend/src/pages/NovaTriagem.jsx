@@ -12,6 +12,7 @@ import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUser } from "react-ic
 function NovaTriagem() {
 
   const navigate = useNavigate();
+  const isAdmin = JSON.parse(localStorage.getItem("usuario") || "{}").is_admin === 1;
 
   const [paciente, setPaciente] = useState({});
 
@@ -78,7 +79,13 @@ const salvarTriagem = async () => {
             <FaNotesMedical />
             <span>Triagem</span>
           </Link>
+          {isAdmin && (
+            <Link to="/cadastro-profissional" className="sidebar-item">
+              <FaUser /><span>Profissional</span>
+            </Link>
+          )}
         </div>
+        
         
         <div className="sidebar-logo">
           <img src={logoInstituto} alt="Logo Instituto" />
