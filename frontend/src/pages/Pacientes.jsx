@@ -1,12 +1,13 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaUserInjured, FaClipboardList, FaNotesMedical } from "react-icons/fa";
+import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUser } from "react-icons/fa";
 import api from "../services/api";
 import logoInstituto from "../assets/logo-IBK-branco.png";
 import "./Pacientes.css";
 
 function Pacientes() {
   const [pacientes, setPacientes] = useState([]);
+  const isAdmin = JSON.parse(localStorage.getItem("usuario") || "{}").is_admin === 1;
 
   useEffect(() => {
     async function carregarPacientes() {
@@ -57,6 +58,11 @@ return (
           <FaNotesMedical />
           <span>Triagem</span>
         </Link>
+        {isAdmin && (
+          <Link to="/cadastro-profissional" className="sidebar-item">
+            <FaUser /><span>Profissional</span>
+          </Link>
+        )}
       </div>
 
       <div className="sidebar-logo">

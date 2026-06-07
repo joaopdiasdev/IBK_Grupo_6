@@ -1,9 +1,9 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaUserInjured, FaClipboardList, FaNotesMedical } from "react-icons/fa";
 import api from "../services/api";
 import logoInstituto from "../assets/logo-IBK-branco.png";
 import "./HistoricoTriagem.css";
+import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUser } from "react-icons/fa";
 
 function formatarData(data) {
   return new Date(data).toLocaleDateString("pt-BR");
@@ -19,6 +19,7 @@ function formatarHora(data) {
 function HistoricoTriagem() {
   const [triagens, setTriagens] = useState([]);
   const [triagemAberta, setTriagemAberta] = useState(null);
+  const isAdmin = JSON.parse(localStorage.getItem("usuario") || "{}").is_admin === 1;
 
   useEffect(() => {
     async function carregarTriagens() {
@@ -51,6 +52,11 @@ function HistoricoTriagem() {
             <FaNotesMedical />
             <span>Triagem</span>
           </Link>
+          {isAdmin && (
+            <Link to="/cadastro-profissional" className="sidebar-item">
+              <FaUser /><span>Profissional</span>
+            </Link>
+          )}
         </div>
 
         <div className="sidebar-logo">
