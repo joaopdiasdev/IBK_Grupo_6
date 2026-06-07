@@ -1,5 +1,9 @@
 import { useEffect, useState } from "react";
+import { Link } from "react-router-dom";
+import { FaUserInjured, FaClipboardList, FaNotesMedical } from "react-icons/fa";
 import api from "../services/api";
+import logoInstituto from "../assets/logo-IBK-branco.png";
+import "./Pacientes.css";
 
 function Pacientes() {
   const [pacientes, setPacientes] = useState([]);
@@ -35,39 +39,79 @@ function Pacientes() {
   return idade;
 }
 
-  return (
-    <div>
-      <h1>Pacientes</h1>
+return (
+  <div className="pacientes-page">
+    <aside className="sidebar">
+      <div className="sidebar-menu">
+        <Link to="/pacientes" className="sidebar-item active">
+          <FaUserInjured />
+          <span>Pacientes</span>
+        </Link>
 
-      <table border="1" cellPadding="8">
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Nome</th>
-            <th>Email</th>
-            <th>Gênero</th>
-            <th>Sexo Clínico</th>
-            <th>Idade</th>
-            <th>Responsável</th>
-          </tr>
-        </thead>
+        <Link to="/resultado" className="sidebar-item">
+          <FaClipboardList />
+          <span>Resultados</span>
+        </Link>
 
-        <tbody>
-          {pacientes.map((paciente) => (
-            <tr key={paciente.id_paciente}>
-              <td>{paciente.id_paciente}</td>
-              <td>{paciente.nome}</td>
-              <td>{paciente.email}</td>
-              <td>{paciente.genero}</td>
-              <td>{paciente.sexo_referencia_clinica}</td>
-              <td>{calcularIdade(paciente.data_nascimento)}</td>
-              <td>{paciente.nome_responsavel}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  );
+        <Link to="/nova-triagem" className="sidebar-item">
+          <FaNotesMedical />
+          <span>Triagem</span>
+        </Link>
+      </div>
+
+      <div className="sidebar-logo">
+        <img src={logoInstituto} alt="Logo Instituto" />
+      </div>
+    </aside>
+
+    <main className="pacientes-content">
+      <div className="pacientes-container">
+        <div className="pacientes-header">
+          <div>
+            <h1>PACIENTES</h1>
+            <p>Lista de pacientes cadastrados no sistema de triagem.</p>
+          </div>
+        </div>
+
+        <div className="pacientes-card">
+          {pacientes.length === 0 ? (
+            <p className="pacientes-vazio">Nenhum paciente cadastrado.</p>
+          ) : (
+            <div className="tabela-wrapper">
+              <table className="pacientes-table">
+                <thead>
+                  <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Email</th>
+                    <th>Gênero</th>
+                    <th>Sexo Clínico</th>
+                    <th>Idade</th>
+                    <th>Responsável</th>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  {pacientes.map((paciente) => (
+                    <tr key={paciente.id_paciente}>
+                      <td>{paciente.id_paciente}</td>
+                      <td className="nome-paciente">{paciente.nome}</td>
+                      <td>{paciente.email}</td>
+                      <td>{paciente.genero}</td>
+                      <td>{paciente.sexo_referencia_clinica}</td>
+                      <td>{calcularIdade(paciente.data_nascimento)} anos</td>
+                      <td>{paciente.nome_responsavel || "-"}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          )}
+        </div>
+      </div>
+    </main>
+  </div>
+);
 }
 
 export default Pacientes;
