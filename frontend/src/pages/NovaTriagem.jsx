@@ -69,12 +69,12 @@ const salvarTriagem = async () => {
             <span>Pacientes</span>
           </Link>
 
-          <Link to="/resultados" className="sidebar-item">
+          <Link to="/resultado" className="sidebar-item">
             <FaClipboardList />
             <span>Resultados</span>
           </Link>
 
-          <Link to="/nova-triagem" className="sidebar-item">
+          <Link to="/nova-triagem" className="sidebar-item active">
             <FaNotesMedical />
             <span>Triagem</span>
           </Link>

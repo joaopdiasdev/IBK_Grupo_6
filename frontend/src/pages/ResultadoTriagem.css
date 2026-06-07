@@ -1,0 +1,248 @@
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap');
+
+* {
+    box-sizing: border-box;
+}
+
+body {
+    margin: 0;
+    font-family: "Inter", Arial, sans-serif;
+    background-color: #f4f7fb;
+}
+
+/* Layout geral */
+
+.resultado-page {
+    min-height: 100vh;
+    display: flex;
+    background-color: #f4f7fb;
+    font-family: "Inter", Arial, sans-serif;
+}
+
+/* Sidebar */
+
+.sidebar {
+    width: 200px;
+    height: 100vh;
+    background-color: #202b5c;
+    color: white;
+    padding: 28px 16px 24px 16px;
+    display: flex;
+    flex-direction: column;
+    position: fixed;
+    left: 0;
+    top: 0;
+}
+
+.sidebar-menu {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.sidebar-item {
+    padding: 10px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 16px;
+    font-weight: 500;
+    letter-spacing: 0.2px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+    color: white;
+}
+
+.sidebar-item:hover {
+    background-color: #31458a;
+}
+
+.sidebar-item.active {
+    background-color: #31458a;
+}
+
+.sidebar-logo {
+    margin-top: auto;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding-bottom: 10px;
+}
+
+.sidebar-logo img {
+    width: 150px;
+    height: auto;
+    object-fit: contain;
+}
+
+/* Conteúdo */
+
+.resultado-content {
+    flex: 1;
+    min-height: 100vh;
+    margin-left: 200px;
+    background-color: #f4f7fb;
+    padding: 72px 64px 48px 64px;
+}
+
+.resultado-container {
+    max-width: 1050px;
+    width: 100%;
+    margin: 0 auto;
+}
+
+.resultado-header {
+    margin-bottom: 28px;
+}
+
+.resultado-header h1 {
+    margin: 0;
+    font-size: 32px;
+    font-weight: 800;
+    letter-spacing: 2px;
+    color: #111827;
+}
+
+.resultado-header p {
+    margin-top: 8px;
+    font-size: 15px;
+    color: #6b7280;
+}
+
+.resultado-card {
+    width: 100%;
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 32px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
+.resultado-status {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding-bottom: 24px;
+    border-bottom: 1px solid #e5e7eb;
+    margin-bottom: 24px;
+}
+
+.resultado-status-icon {
+    font-size: 34px;
+    color: #202b5c;
+}
+
+.resultado-status h2 {
+    margin: 0;
+    font-size: 20px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.resultado-status p {
+    margin: 6px 0 0 0;
+    font-size: 15px;
+    color: #6b7280;
+}
+
+.resultado-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+}
+
+.resultado-info {
+    background-color: #f9fafb;
+    border: 1px solid #e5e7eb;
+    border-radius: 14px;
+    padding: 18px;
+}
+
+.resultado-info span {
+    display: block;
+    margin-bottom: 8px;
+    font-size: 13px;
+    font-weight: 600;
+    color: #6b7280;
+}
+
+.resultado-info strong {
+    font-size: 20px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.resultado-recomendacao {
+    grid-column: span 2;
+    background-color: #eef2ff;
+    border-color: #c7d2fe;
+}
+
+.resultado-recomendacao strong {
+    color: #202b5c;
+}
+
+.resultado-footer {
+    margin-top: 28px;
+    padding-top: 24px;
+    border-top: 1px solid #e5e7eb;
+    display: flex;
+    gap: 12px;
+    justify-content: flex-end;
+}
+
+.btn-nova-triagem,
+.btn-secundario {
+    text-decoration: none;
+    border-radius: 10px;
+    padding: 12px 22px;
+    font-size: 14px;
+    font-weight: 700;
+}
+
+.btn-nova-triagem {
+    background-color: #202b5c;
+    color: white;
+}
+
+.btn-nova-triagem:hover {
+    background-color: #31458a;
+}
+
+.btn-secundario {
+    background-color: #ffffff;
+    color: #202b5c;
+    border: 1px solid #202b5c;
+}
+
+.btn-secundario:hover {
+    background-color: #eef2ff;
+}
+
+/* Estado vazio */
+
+.resultado-vazio {
+    text-align: center;
+    max-width: 620px;
+    margin: 0 auto;
+}
+
+.resultado-alerta-icon {
+    font-size: 42px;
+    color: #202b5c;
+    margin-bottom: 16px;
+}
+
+.resultado-vazio h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 800;
+    color: #111827;
+}
+
+.resultado-vazio p {
+    margin: 10px 0 24px 0;
+    font-size: 15px;
+    color: #6b7280;
+}
