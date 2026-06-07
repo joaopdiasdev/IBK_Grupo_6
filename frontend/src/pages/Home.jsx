@@ -1,7 +1,8 @@
 import { useState } from "react";
 import api from "../services/api";
 import { useNavigate } from "react-router-dom";
-
+import "./Home.css";
+import logoInstituto from "../assets/LOGO_IBK.png";
 
 
 function Home() {
@@ -38,43 +39,42 @@ function Home() {
 
 
   return (
-    <div>
+  <div className="login-page">
+    <form className="login-card" onSubmit={fazerLogin}>
+      <div className="login-logo">
+        <img src={logoInstituto} alt="Logo IBK" />
+      </div>
 
-      <h1>Sistema de Triagem SXF</h1>
+      <div className="login-header">
+        <h1>Sistema de Triagem SXF</h1>
+        <p>Acesse com suas credenciais para iniciar uma triagem.</p>
+      </div>
 
-      <form onSubmit={fazerLogin}>
+      <div className="login-grupo">
+        <label>Email</label>
+        <input
+          type="email"
+          placeholder="Digite seu email"
+          value={email}
+          onChange={(e) => setEmail(e.target.value)}
+        />
+      </div>
 
-        <div>
-          <label>Email</label>
-          <br />
-          <input
-            type="email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
-          />
-        </div>
+      <div className="login-grupo">
+        <label>Senha</label>
+        <input
+          type="password"
+          placeholder="Digite sua senha"
+          value={senha}
+          onChange={(e) => setSenha(e.target.value)}
+        />
+      </div>
 
-        <br />
-
-        <div>
-          <label>Senha</label>
-          <br />
-          <input
-            type="password"
-            value={senha}
-            onChange={(e) => setSenha(e.target.value)}
-          />
-        </div>
-
-        <br />
-
-        <button type="submit">
-          Entrar
-        </button>
-
-      </form>
-
-    </div>
+      <button className="login-botao" type="submit">
+        Entrar
+      </button>
+    </form>
+  </div>
   );
 }
 
