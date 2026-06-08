@@ -24,7 +24,14 @@ function HistoricoTriagem() {
   useEffect(() => {
     async function carregarTriagens() {
       try {
-        const resposta = await api.get("/triagens");
+        const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+
+        const resposta = await api.get("/triagens", {
+          params: {
+          id_profissional: usuario.id_profissional,
+          is_admin: usuario.is_admin
+        }
+        });
         setTriagens(resposta.data);
       } catch (erro) {
         console.error("Erro ao carregar histórico:", erro);

@@ -46,10 +46,13 @@ function NovaTriagem() {
   
 const salvarTriagem = async () => {
   try {
+    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+
     const resposta = await api.post("/triagens", {
       paciente,
       sintomas: sintomasSelecionados,
-      observacoes: observacoes
+      observacoes: observacoes,
+      id_profissional: usuario.id_profissional
     });
 
     navigate("/resultado", {

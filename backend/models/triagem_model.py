@@ -166,31 +166,57 @@ def buscar_triagem_por_id(id_triagem):
     conexao.close()
 
     return triagem
-
-def buscar_historico_triagens():
+def buscar_historico_triagens(id_profissional=None, is_admin=0):
     conexao = conectar_banco()
     cursor = conexao.cursor(dictionary=True)
 
-    cursor.execute("""
-        SELECT
-            t.id_triagem,
-            t.data_triagem,
-            t.score_triagem,
-            t.recomendacao,
-            t.observacoes,
+    if str(is_admin) == "1":
+        cursor.execute("""
+            SELECT
+                t.id_triagem,
+                t.data_triagem,
+                t.score_triagem,
+                t.recomendacao,
+                t.observacoes,
 
-            pe.nome
+                pe.nome
 
-        FROM Triagem t
+            FROM Triagem t
 
-        JOIN Paciente p
-            ON t.id_paciente_FK = p.id_paciente
+            JOIN Paciente p
+                ON t.id_paciente_FK = p.id_paciente
 
-        JOIN Pessoa pe
-            ON p.id_pessoa_FK = pe.id_pessoa
+            JOIN Pessoa pe
+                ON p.id_pessoa_FK = pe.id_pessoa
 
-        ORDER BY t.data_triagem DESC
-    """)
+            ORDER BY t.data_triagem DESC
+        """)
+    else:
+        cursor.execute("""
+            SELECT
+                t.id_triagem,
+                t.data_triagem,
+                t.score_triagem,
+                t.recomendacao,
+                t.observacoes,
+
+                pe.nome
+
+            FROM Triagem t
+
+            JOIN Paciente p
+                ON t.id_paciente_FK = p.id_paciente
+
+            JOIN Pessoa pe
+                ON p.id_pessoa_FK = pe.id_pessoa
+
+            JOIN Triagem_Profissional tp
+                ON tp.id_triagem_FK = t.id_triagem
+
+            WHERE tp.id_profissional_FK = %s
+
+            ORDER BY t.data_triagem DESC
+        """, (id_profissional,))
 
     resultado = cursor.fetchall()
 
@@ -198,3 +224,26 @@ def buscar_historico_triagens():
     conexao.close()
 
     return resultado
+
+def vincular_profissional_triagem(id_triagem, id_profissional):
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        INSERT INTO Triagem_Profissional (
+            id_triagem_FK,
+            id_profissional_FK,
+            papel,
+            data_inicio
+        )
+        VALUES (%s, %s, %s, NOW())
+    """, (
+        id_triagem,
+        id_profissional,
+        "RESPONSAVEL_INICIAL"
+    ))
+
+    conexao.commit()
+
+    cursor.close()
+    conexao.close()

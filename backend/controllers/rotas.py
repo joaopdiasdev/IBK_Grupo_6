@@ -14,7 +14,8 @@ from models.triagem_model import (
     gerar_recomendacao,
     salvar_triagem,
     buscar_triagem_por_id,
-    buscar_historico_triagens
+    buscar_historico_triagens,
+    vincular_profissional_triagem
 )
 
 from models.pessoa_model import buscar_todas_pessoas
@@ -48,7 +49,14 @@ def listar_pessoas():
 
 @rotas.route("/triagens")
 def listar_triagens():
-    resultado = buscar_historico_triagens()
+    id_profissional = request.args.get("id_profissional")
+    is_admin = request.args.get("is_admin")
+
+    resultado = buscar_historico_triagens(
+        id_profissional,
+        is_admin
+    )
+
     return jsonify(resultado)
 
 @rotas.route("/triagens/calcular", methods=["POST"])
@@ -119,6 +127,10 @@ def criar_triagem():
         recomendacao,
         sintomas
     )
+    id_profissional = dados.get("id_profissional")
+
+    if id_profissional:
+        vincular_profissional_triagem(id_triagem, id_profissional)
 
     return jsonify({
         "mensagem": "Triagem cadastrada com sucesso",
@@ -144,9 +156,22 @@ def login():
     cursor = conexao.cursor(dictionary=True)
 
     cursor.execute("""
-        SELECT id_pessoa, nome, email, is_admin
-        FROM Pessoa
-        WHERE email = %s AND senha = %s
+    SELECT
+        p.id_pessoa,
+        p.nome,
+        p.email,
+        p.is_admin,
+
+        ps.id_profissional,
+        ps.especialidade
+
+    FROM Pessoa p
+
+    LEFT JOIN Profissional_Saude ps
+        ON p.id_pessoa = ps.id_pessoa_FK
+
+    WHERE p.email = %s
+      AND p.senha = %s
     """, (email, senha))
 
     usuario = cursor.fetchone()
