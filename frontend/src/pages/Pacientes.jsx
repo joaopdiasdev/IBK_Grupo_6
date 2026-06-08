@@ -12,7 +12,14 @@ function Pacientes() {
   useEffect(() => {
     async function carregarPacientes() {
       try {
-        const resposta = await api.get("/pacientes");
+        const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
+
+        const resposta = await api.get("/pacientes", {
+            params: {
+            id_profissional: usuario.id_profissional,
+            is_admin: usuario.is_admin
+            }
+            });
         setPacientes(resposta.data);
       } catch (erro) {
         console.error("Erro ao carregar pacientes:", erro);

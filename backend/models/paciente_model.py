@@ -1,23 +1,44 @@
 from dataBase.conexao import conectar_banco
 
-def buscar_todos_pacientes():
+def buscar_todos_pacientes(id_profissional=None, is_admin=0):
     conexao = conectar_banco()
     cursor = conexao.cursor(dictionary=True)
 
-    cursor.execute("""
-        SELECT
-            p.id_paciente,
-            pe.nome,
-            pe.email,
-            p.genero,
-            p.sexo_referencia_clinica,
-            p.data_nascimento,
-            p.nome_responsavel
-        FROM Paciente p
-        JOIN Pessoa pe
-            ON p.id_pessoa_FK = pe.id_pessoa
-        ORDER BY pe.nome
-    """)
+    if str(is_admin) == "1":
+        cursor.execute("""
+            SELECT
+                p.id_paciente,
+                pe.nome,
+                pe.email,
+                p.genero,
+                p.sexo_referencia_clinica,
+                p.data_nascimento,
+                p.nome_responsavel
+            FROM Paciente p
+            JOIN Pessoa pe
+                ON p.id_pessoa_FK = pe.id_pessoa
+            ORDER BY pe.nome
+        """)
+    else:
+        cursor.execute("""
+            SELECT DISTINCT
+                p.id_paciente,
+                pe.nome,
+                pe.email,
+                p.genero,
+                p.sexo_referencia_clinica,
+                p.data_nascimento,
+                p.nome_responsavel
+            FROM Paciente p
+            JOIN Pessoa pe
+                ON p.id_pessoa_FK = pe.id_pessoa
+            JOIN Triagem t
+                ON t.id_paciente_FK = p.id_paciente
+            JOIN Triagem_Profissional tp
+                ON tp.id_triagem_FK = t.id_triagem
+            WHERE tp.id_profissional_FK = %s
+            ORDER BY pe.nome
+        """, (id_profissional,))
 
     resultado = cursor.fetchall()
 

@@ -37,7 +37,13 @@ def listar_sintomas():
 
 @rotas.route("/pacientes")
 def listar_pacientes():
-    resultado = buscar_todos_pacientes()
+    id_profissional = request.args.get("id_profissional")
+    is_admin = request.args.get("is_admin")
+
+    resultado = buscar_todos_pacientes(
+        id_profissional,
+        is_admin
+    )
     return jsonify(resultado)
 
 @rotas.route("/pessoas")
