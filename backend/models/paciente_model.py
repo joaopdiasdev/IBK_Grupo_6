@@ -1,4 +1,5 @@
 from dataBase.conexao import conectar_banco
+from werkzeug.security import generate_password_hash
 
 def buscar_todos_pacientes(id_profissional=None, is_admin=0):
     conexao = conectar_banco()
@@ -53,7 +54,7 @@ from dataBase.conexao import conectar_banco
 def cadastrar_paciente(nome, email, senha, genero, sexo_referencia_clinica, data_nascimento, nome_responsavel):
     conexao = conectar_banco()
     cursor = conexao.cursor()
-
+    senha_hash = generate_password_hash(senha)
     sql_pessoa = """
         INSERT INTO Pessoa (nome, email, senha, is_admin)
         VALUES (%s, %s, %s, 0)
@@ -64,7 +65,6 @@ def cadastrar_paciente(nome, email, senha, genero, sexo_referencia_clinica, data
     cursor.execute(sql_pessoa, valores_pessoa)
 
     id_pessoa = cursor.lastrowid
-
     sql_paciente = """
         INSERT INTO Paciente (
             id_pessoa_FK,

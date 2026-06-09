@@ -1,5 +1,6 @@
 from flask import Blueprint, jsonify, request
 from models.profissional_model import cadastrar_profissional
+from werkzeug.security import check_password_hash
 
 # mudança geral para o projeto ficar mais organizado utilizando MVC
 from models.sintoma_model import buscar_todos_sintomas
@@ -162,23 +163,23 @@ def login():
     cursor = conexao.cursor(dictionary=True)
 
     cursor.execute("""
-    SELECT
-        p.id_pessoa,
-        p.nome,
-        p.email,
-        p.is_admin,
+        SELECT
+            p.id_pessoa,
+            p.nome,
+            p.email,
+            p.senha,
+            p.is_admin,
 
-        ps.id_profissional,
-        ps.especialidade
+            ps.id_profissional,
+            ps.especialidade
 
-    FROM Pessoa p
+        FROM Pessoa p
 
-    LEFT JOIN Profissional_Saude ps
-        ON p.id_pessoa = ps.id_pessoa_FK
+        LEFT JOIN Profissional_Saude ps
+            ON p.id_pessoa = ps.id_pessoa_FK
 
-    WHERE p.email = %s
-      AND p.senha = %s
-    """, (email, senha))
+        WHERE p.email = %s
+    """, (email,))
 
     usuario = cursor.fetchone()
 
@@ -187,6 +188,11 @@ def login():
 
     if usuario is None:
         return jsonify({"erro": "Credenciais inválidas"}), 401
+
+    if not check_password_hash(usuario["senha"], senha):
+        return jsonify({"erro": "Credenciais inválidas"}), 401
+
+    usuario.pop("senha")
 
     return jsonify({
         "mensagem": "Login realizado com sucesso",
