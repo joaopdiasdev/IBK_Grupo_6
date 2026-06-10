@@ -1,11 +1,13 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
 from controllers.rotas import rotas
+from controllers.relatorio import relatorio_bp
 
 app = Flask(__name__)
 CORS(app)
 
 app.register_blueprint(rotas)
+app.register_blueprint(relatorio_bp)
 
 @app.route("/")
 def index():
