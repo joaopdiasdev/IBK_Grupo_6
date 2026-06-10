@@ -4,6 +4,7 @@ import api from "../services/api";
 import logoInstituto from "../assets/logo-IBK-branco.png";
 import "./HistoricoTriagem.css";
 import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUser } from "react-icons/fa";
+import BotaoRelatorio from "../components/BotaoRelatorio";
 
 function formatarData(data) {
   return new Date(data).toLocaleDateString("pt-BR");
@@ -93,6 +94,7 @@ function HistoricoTriagem() {
                       <th>Score</th>
                       <th>Recomendação</th>
                       <th>Observações</th>
+                      <th>Relatório</th>
                     </tr>
                   </thead>
 
@@ -122,11 +124,14 @@ function HistoricoTriagem() {
                                 : "Visualizar"}
                             </button>
                           </td>
+                          <td>
+                            <BotaoRelatorio idTriagem={triagem.id_triagem} />
+                          </td>
                         </tr>
 
                         {triagemAberta === triagem.id_triagem && (
                           <tr className="linha-observacoes">
-                            <td colSpan="7">
+                            <td colSpan="8">
                               <strong>Observações:</strong>
                               <p>
                                 {triagem.observacoes ||
