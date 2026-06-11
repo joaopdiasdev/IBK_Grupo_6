@@ -209,3 +209,21 @@ body {
     padding: 32px;
     font-size: 15px;
 }
+
+/*Botão gerar pdf*/
+
+.btn-relatorio {
+  border: none;
+  background-color: #c53131 ;
+  color: white;
+  padding: 8px 14px;
+  border-radius: 8px;
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.btn-relatorio:hover {
+  background-color: #81201c;
+}

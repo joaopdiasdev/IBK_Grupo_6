@@ -4,6 +4,7 @@ import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUser } from "react-ic
 import api from "../services/api";
 import logoInstituto from "../assets/logo-IBK-branco.png";
 import "./HistoricoTriagem.css";
+import BotaoRelatorio from "../components/BotaoRelatorio";
 
 function buscarUsuarioSalvo() {
   const usuarioSalvo = localStorage.getItem("usuario");
@@ -125,6 +126,7 @@ function HistoricoTriagem() {
                       <th>Score</th>
                       <th>Recomendacao</th>
                       <th>Observacoes</th>
+                      <th>Relatório</th>
                     </tr>
                   </thead>
 
@@ -149,11 +151,14 @@ function HistoricoTriagem() {
                                 {buscarTextoBotao(triagem.id_triagem)}
                               </button>
                             </td>
+                            <td>
+                              <BotaoRelatorio idTriagem={triagem.id_triagem} />
+                            </td>
                           </tr>
 
                           {observacoesAbertas && (
                             <tr className="linha-observacoes">
-                              <td colSpan="7">
+                              <td colSpan="8">
                                 <strong>Observacoes:</strong>
                                 <p>{buscarTextoObservacao(triagem)}</p>
                               </td>
