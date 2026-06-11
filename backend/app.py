@@ -1,9 +1,11 @@
 from flask import Flask, jsonify
 from flask_cors import CORS
+from auth import configurar_chave_secreta
 from controllers.rotas import rotas
 from controllers.relatorio import relatorio_bp
 
 app = Flask(__name__)
+configurar_chave_secreta(app)
 CORS(app)
 
 app.register_blueprint(rotas)

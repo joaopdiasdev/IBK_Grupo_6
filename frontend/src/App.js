@@ -6,9 +6,43 @@ import HistoricoTriagem from "./pages/HistoricoTriagem";
 import Pacientes from "./pages/Pacientes";
 import CadastroProfissional from "./pages/CadastroProfissional";
 
+function buscarUsuarioSalvo() {
+  const usuarioSalvo = localStorage.getItem("usuario");
+
+  if (!usuarioSalvo) {
+    return null;
+  }
+
+  return JSON.parse(usuarioSalvo);
+}
+
+function RotaProtegida({ children }) {
+  const token = localStorage.getItem("token");
+
+  if (!token) {
+    return <Navigate to="/" />;
+  }
+
+  return children;
+}
+
 function SoAdmin({ children }) {
-  const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-  return usuario.is_admin === 1 ? children : <Navigate to="/" />;
+  const token = localStorage.getItem("token");
+  const usuario = buscarUsuarioSalvo();
+
+  if (!token) {
+    return <Navigate to="/" />;
+  }
+
+  if (!usuario) {
+    return <Navigate to="/" />;
+  }
+
+  if (usuario.is_admin !== 1) {
+    return <Navigate to="/" />;
+  }
+
+  return children;
 }
 
 function App() {
@@ -18,19 +52,19 @@ function App() {
         <Route path="/" element={<Home />} />
         <Route
           path="/nova-triagem"
-          element={<NovaTriagem />}
+          element={<RotaProtegida><NovaTriagem /></RotaProtegida>}
         />
         <Route
           path="/resultado"
-          element={<ResultadoTriagem />}
+          element={<RotaProtegida><ResultadoTriagem /></RotaProtegida>}
         />
         <Route
           path="/historico"
-          element={<HistoricoTriagem />}
+          element={<RotaProtegida><HistoricoTriagem /></RotaProtegida>}
         />
         <Route
           path="/pacientes"
-          element={<Pacientes />}
+          element={<RotaProtegida><Pacientes /></RotaProtegida>}
         />
         <Route
           path="/cadastro-profissional"
