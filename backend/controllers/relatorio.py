@@ -10,27 +10,37 @@ relatorio_bp = Blueprint("relatorio", __name__)
 
 @relatorio_bp.route("/relatorio/<int:id_triagem>")
 def gerar_relatorio(id_triagem):
+    conexao = conectar_banco()
+    cursor = conexao.cursor(dictionary=True)
 
-    # Busca os dados no banco
-    conn = conectar_banco()
-    cur = conn.cursor(dictionary=True)
-    cur.execute("""
-        SELECT t.*, pe.nome, p.data_nascimento, p.genero, p.nome_responsavel
+    cursor.execute("""
+        SELECT
+            t.*,
+            pe.nome,
+            p.data_nascimento,
+            p.genero,
+            p.nome_responsavel,
+            pe_prof.nome AS nome_doutor_responsavel
         FROM Triagem t
         JOIN Paciente p ON t.id_paciente_FK = p.id_paciente
         LEFT JOIN Pessoa pe ON p.id_pessoa_FK = pe.id_pessoa
+        LEFT JOIN Triagem_Profissional tp ON tp.id_triagem_FK = t.id_triagem
+        LEFT JOIN Profissional_Saude ps ON tp.id_profissional_FK = ps.id_profissional
+        LEFT JOIN Pessoa pe_prof ON ps.id_pessoa_FK = pe_prof.id_pessoa
         WHERE t.id_triagem = %s
+        ORDER BY tp.data_inicio DESC
+        LIMIT 1
     """, (id_triagem,))
-    triagem = cur.fetchone()
+    triagem = cursor.fetchone()
 
-    cur.execute("""
+    cursor.execute("""
         SELECT s.descricao FROM Resposta_Sintoma rs
         JOIN Sintoma s ON rs.id_sintoma_FK = s.id_sintoma
         WHERE rs.id_triagem_FK = %s
     """, (id_triagem,))
-    sintomas = cur.fetchall()
-    cur.close()
-    conn.close()
+    sintomas = cursor.fetchall()
+    cursor.close()
+    conexao.close()
 
     if not triagem:
         return {"erro": "Triagem não encontrada"}, 404
@@ -63,10 +73,18 @@ def gerar_relatorio(id_triagem):
     conteudo += [
         Paragraph(f"Relatório de Triagem #{id_triagem:04d}", titulo),
         Spacer(1, 12),
-        Paragraph(f"<b>Paciente:</b> {triagem.get('nome') or '—'}", normal),
-        Paragraph(f"<b>Nascimento:</b> {triagem.get('data_nascimento') or '—'}", normal),
-        Paragraph(f"<b>Gênero:</b> {(triagem.get('genero') or '—').replace('_', ' ').title()}", normal),
-        Paragraph(f"<b>Responsável:</b> {triagem.get('nome_responsavel') or '—'}", normal),
+        Paragraph(f"<b>Paciente:</b> {triagem.get('nome') or '-'}", normal),
+        Paragraph(f"<b>Nascimento:</b> {triagem.get('data_nascimento') or '-'}", normal),
+        Paragraph(
+            f"<b>Genero:</b> {(triagem.get('genero') or '-').replace('_', ' ').title()}",
+            normal
+        ),
+        Paragraph(f"<b>Responsavel:</b> {triagem.get('nome_responsavel') or '-'}", normal),
+        Paragraph(
+            f"<b>Doutor responsavel pela triagem:</b> "
+            f"{triagem.get('nome_doutor_responsavel') or '-'}",
+            normal
+        ),
         Spacer(1, 12),
         Paragraph(f"<b>Score:</b> {float(triagem.get('score_triagem') or 0):.2f}", normal),
         Paragraph(f"<b>Recomendação:</b> {recomendacao}", normal),
