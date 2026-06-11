@@ -1,6 +1,11 @@
 from dataBase.conexao import conectar_banco
 from werkzeug.security import generate_password_hash
 
+
+def gerar_hash_da_senha(senha):
+    return generate_password_hash(senha)
+
+
 def buscar_todos_pacientes(id_profissional=None, is_admin=0):
     conexao = conectar_banco()
     cursor = conexao.cursor(dictionary=True)
@@ -48,24 +53,85 @@ def buscar_todos_pacientes(id_profissional=None, is_admin=0):
 
     return resultado
 
-from dataBase.conexao import conectar_banco
-
 
 def cadastrar_paciente(nome, email, senha, genero, sexo_referencia_clinica, data_nascimento, nome_responsavel):
     conexao = conectar_banco()
     cursor = conexao.cursor()
-    senha_hash = generate_password_hash(senha)
-    sql_pessoa = """
+
+    cursor.execute("""
+        SELECT
+            p.id_pessoa,
+            p.is_admin,
+            pa.id_paciente
+        FROM Pessoa p
+        LEFT JOIN Paciente pa
+            ON pa.id_pessoa_FK = p.id_pessoa
+        WHERE p.email = %s
+    """, (email,))
+
+    pessoa_existente = cursor.fetchone()
+
+    if pessoa_existente:
+        id_pessoa = pessoa_existente[0]
+        is_admin = pessoa_existente[1]
+        id_paciente_existente = pessoa_existente[2]
+
+        if id_paciente_existente:
+            cursor.execute("""
+                UPDATE Pessoa
+                SET nome = %s
+                WHERE id_pessoa = %s
+            """, (nome, id_pessoa))
+
+            cursor.execute("""
+                UPDATE Paciente
+                SET genero = %s,
+                    sexo_referencia_clinica = %s,
+                    data_nascimento = %s,
+                    nome_responsavel = %s
+                WHERE id_pessoa_FK = %s
+            """, (
+                genero,
+                sexo_referencia_clinica,
+                data_nascimento,
+                nome_responsavel,
+                id_pessoa
+            ))
+
+            conexao.commit()
+            cursor.close()
+            conexao.close()
+            return {
+                "sucesso": True,
+                "id_paciente": id_paciente_existente
+            }
+
+        if is_admin == 1:
+            cursor.close()
+            conexao.close()
+            return {
+                "sucesso": False,
+                "erro": "Este email ja pertence a um profissional ou administrador"
+            }
+
+        cursor.close()
+        conexao.close()
+        return {
+            "sucesso": False,
+            "erro": "Este email ja esta em uso"
+        }
+
+    senha_hash = gerar_hash_da_senha(senha)
+
+    cursor.execute("""
         INSERT INTO Pessoa (nome, email, senha, is_admin)
         VALUES (%s, %s, %s, 0)
-    """
+    """, (nome, email, senha_hash))
 
-    valores_pessoa = (nome, email, senha)
+    # lastrowid guarda o id do ultimo registro inserido.
+    id_pessoa_criada = cursor.lastrowid
 
-    cursor.execute(sql_pessoa, valores_pessoa)
-
-    id_pessoa = cursor.lastrowid
-    sql_paciente = """
+    cursor.execute("""
         INSERT INTO Paciente (
             id_pessoa_FK,
             genero,
@@ -74,23 +140,23 @@ def cadastrar_paciente(nome, email, senha, genero, sexo_referencia_clinica, data
             nome_responsavel
         )
         VALUES (%s, %s, %s, %s, %s)
-    """
-
-    valores_paciente = (
-        id_pessoa,
+    """, (
+        id_pessoa_criada,
         genero,
         sexo_referencia_clinica,
         data_nascimento,
         nome_responsavel
-    )
+    ))
 
-    cursor.execute(sql_paciente, valores_paciente)
-
-    id_paciente = cursor.lastrowid
+    # lastrowid guarda o id do paciente criado agora.
+    id_paciente_criado = cursor.lastrowid
 
     conexao.commit()
 
     cursor.close()
     conexao.close()
 
-    return id_paciente
+    return {
+        "sucesso": True,
+        "id_paciente": id_paciente_criado
+    }

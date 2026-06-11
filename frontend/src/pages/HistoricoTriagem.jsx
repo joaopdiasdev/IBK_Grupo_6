@@ -1,9 +1,19 @@
-import { useEffect, useState } from "react";
+import { Fragment, useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUser } from "react-icons/fa";
 import api from "../services/api";
 import logoInstituto from "../assets/logo-IBK-branco.png";
 import "./HistoricoTriagem.css";
-import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUser } from "react-icons/fa";
+
+function buscarUsuarioSalvo() {
+  const usuarioSalvo = localStorage.getItem("usuario");
+
+  if (!usuarioSalvo) {
+    return {};
+  }
+
+  return JSON.parse(usuarioSalvo);
+}
 
 function formatarData(data) {
   return new Date(data).toLocaleDateString("pt-BR");
@@ -19,22 +29,42 @@ function formatarHora(data) {
 function HistoricoTriagem() {
   const [triagens, setTriagens] = useState([]);
   const [triagemAberta, setTriagemAberta] = useState(null);
-  const isAdmin = JSON.parse(localStorage.getItem("usuario") || "{}").is_admin === 1;
+
+  const usuario = buscarUsuarioSalvo();
+  const isAdmin = usuario.is_admin === 1;
+
+  function alternarObservacoes(idTriagem) {
+    if (triagemAberta === idTriagem) {
+      setTriagemAberta(null);
+      return;
+    }
+
+    setTriagemAberta(idTriagem);
+  }
+
+  function buscarTextoBotao(idTriagem) {
+    if (triagemAberta === idTriagem) {
+      return "Ocultar";
+    }
+
+    return "Visualizar";
+  }
+
+  function buscarTextoObservacao(triagem) {
+    if (triagem.observacoes) {
+      return triagem.observacoes;
+    }
+
+    return "Nenhuma observacao registrada.";
+  }
 
   useEffect(() => {
     async function carregarTriagens() {
       try {
-        const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-
-        const resposta = await api.get("/triagens", {
-          params: {
-          id_profissional: usuario.id_profissional,
-          is_admin: usuario.is_admin
-        }
-        });
+        const resposta = await api.get("/triagens");
         setTriagens(resposta.data);
       } catch (erro) {
-        console.error("Erro ao carregar histórico:", erro);
+        console.error("Erro ao carregar historico:", erro);
       }
     }
 
@@ -52,16 +82,18 @@ function HistoricoTriagem() {
 
           <Link to="/historico" className="sidebar-item active">
             <FaClipboardList />
-            <span>Histórico</span>
+            <span>Historico</span>
           </Link>
 
           <Link to="/nova-triagem" className="sidebar-item">
             <FaNotesMedical />
             <span>Triagem</span>
           </Link>
+
           {isAdmin && (
             <Link to="/cadastro-profissional" className="sidebar-item">
-              <FaUser /><span>Profissional</span>
+              <FaUser />
+              <span>Profissional</span>
             </Link>
           )}
         </div>
@@ -74,8 +106,8 @@ function HistoricoTriagem() {
       <main className="historico-content">
         <section className="historico-area">
           <div className="historico-titulo">
-            <h1>HISTÓRICO</h1>
-            <p>Consulte as triagens já realizadas no sistema.</p>
+            <h1>HISTORICO</h1>
+            <p>Consulte as triagens ja realizadas no sistema.</p>
           </div>
 
           <div className="historico-card">
@@ -91,52 +123,45 @@ function HistoricoTriagem() {
                       <th>Data</th>
                       <th>Hora</th>
                       <th>Score</th>
-                      <th>Recomendação</th>
-                      <th>Observações</th>
+                      <th>Recomendacao</th>
+                      <th>Observacoes</th>
                     </tr>
                   </thead>
 
                   <tbody>
-                    {triagens.map((triagem) => (
-                      <>
-                        <tr key={triagem.id_triagem}>
-                          <td>{triagem.id_triagem}</td>
-                          <td className="nome-paciente">{triagem.nome}</td>
-                          <td>{formatarData(triagem.data_triagem)}</td>
-                          <td>{formatarHora(triagem.data_triagem)}</td>
-                          <td>{triagem.score_triagem}</td>
-                          <td>{triagem.recomendacao}</td>
-                          <td>
-                            <button
-                              className="btn-observacoes"
-                              onClick={() =>
-                                setTriagemAberta(
-                                  triagemAberta === triagem.id_triagem
-                                    ? null
-                                    : triagem.id_triagem
-                                )
-                              }
-                            >
-                              {triagemAberta === triagem.id_triagem
-                                ? "Ocultar"
-                                : "Visualizar"}
-                            </button>
-                          </td>
-                        </tr>
+                    {triagens.map((triagem) => {
+                      const observacoesAbertas = triagemAberta === triagem.id_triagem;
 
-                        {triagemAberta === triagem.id_triagem && (
-                          <tr className="linha-observacoes">
-                            <td colSpan="7">
-                              <strong>Observações:</strong>
-                              <p>
-                                {triagem.observacoes ||
-                                  "Nenhuma observação registrada."}
-                              </p>
+                      return (
+                        <Fragment key={triagem.id_triagem}>
+                          <tr>
+                            <td>{triagem.id_triagem}</td>
+                            <td className="nome-paciente">{triagem.nome}</td>
+                            <td>{formatarData(triagem.data_triagem)}</td>
+                            <td>{formatarHora(triagem.data_triagem)}</td>
+                            <td>{triagem.score_triagem}</td>
+                            <td>{triagem.recomendacao}</td>
+                            <td>
+                              <button
+                                className="btn-observacoes"
+                                onClick={() => alternarObservacoes(triagem.id_triagem)}
+                              >
+                                {buscarTextoBotao(triagem.id_triagem)}
+                              </button>
                             </td>
                           </tr>
-                        )}
-                      </>
-                    ))}
+
+                          {observacoesAbertas && (
+                            <tr className="linha-observacoes">
+                              <td colSpan="7">
+                                <strong>Observacoes:</strong>
+                                <p>{buscarTextoObservacao(triagem)}</p>
+                              </td>
+                            </tr>
+                          )}
+                        </Fragment>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>

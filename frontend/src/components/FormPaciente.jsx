@@ -1,10 +1,21 @@
 function FormPaciente({ paciente, setPaciente }) {
-  const handleChange = (e) => {
+  function atualizarCampo(evento) {
+    const nomeDoCampo = evento.target.name;
+    const valorDoCampo = evento.target.value;
+
     setPaciente({
       ...paciente,
-      [e.target.name]: e.target.value
+      [nomeDoCampo]: valorDoCampo
     });
-  };
+  }
+
+  function buscarValorDoCampo(nomeDoCampo) {
+    if (paciente[nomeDoCampo]) {
+      return paciente[nomeDoCampo];
+    }
+
+    return "";
+  }
 
   return (
     <div className="form-paciente">
@@ -13,8 +24,8 @@ function FormPaciente({ paciente, setPaciente }) {
         <input
           name="nome"
           placeholder="Digite o nome"
-          value={paciente.nome || ""}
-          onChange={handleChange}
+          value={buscarValorDoCampo("nome")}
+          onChange={atualizarCampo}
         />
       </div>
 
@@ -23,8 +34,8 @@ function FormPaciente({ paciente, setPaciente }) {
         <input
           name="email"
           placeholder="Digite o email"
-          value={paciente.email || ""}
-          onChange={handleChange}
+          value={buscarValorDoCampo("email")}
+          onChange={atualizarCampo}
         />
       </div>
 
@@ -33,32 +44,32 @@ function FormPaciente({ paciente, setPaciente }) {
         <input
           name="data_nascimento"
           type="date"
-          value={paciente.data_nascimento || ""}
-          onChange={handleChange}
+          value={buscarValorDoCampo("data_nascimento")}
+          onChange={atualizarCampo}
         />
       </div>
 
       <div className="form-grupo">
-        <label>Gênero</label>
+        <label>Genero</label>
         <select
           name="genero"
-          value={paciente.genero || ""}
-          onChange={handleChange}
+          value={buscarValorDoCampo("genero")}
+          onChange={atualizarCampo}
         >
-          <option value="">Selecione o gênero</option>
+          <option value="">Selecione o genero</option>
           <option value="MASCULINO">Masculino</option>
           <option value="FEMININO">Feminino</option>
           <option value="OUTRO">Outro</option>
-          <option value="PREFERE_NAO_INFORMAR">Prefere não informar</option>
+          <option value="PREFERE_NAO_INFORMAR">Prefere nao informar</option>
         </select>
       </div>
 
       <div className="form-grupo">
-        <label>Sexo de referência clínica</label>
+        <label>Sexo de referencia clinica</label>
         <select
           name="sexo_referencia_clinica"
-          value={paciente.sexo_referencia_clinica || ""}
-          onChange={handleChange}
+          value={buscarValorDoCampo("sexo_referencia_clinica")}
+          onChange={atualizarCampo}
         >
           <option value="">Selecione</option>
           <option value="M">Masculino</option>
@@ -67,12 +78,12 @@ function FormPaciente({ paciente, setPaciente }) {
       </div>
 
       <div className="form-grupo">
-        <label>Nome do responsável</label>
+        <label>Nome do responsavel</label>
         <input
           name="nome_responsavel"
-          placeholder="Digite o nome do responsável"
-          value={paciente.nome_responsavel || ""}
-          onChange={handleChange}
+          placeholder="Digite o nome do responsavel"
+          value={buscarValorDoCampo("nome_responsavel")}
+          onChange={atualizarCampo}
         />
       </div>
     </div>
