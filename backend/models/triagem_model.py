@@ -49,12 +49,18 @@ def calcular_score_triagem(sexo, sintomas):
     return float(resultado["score"])
 
 
-def gerar_recomendacao(score):
-    #valor só pra teste, trocar para o valor do artigo
-    if score >= 0.50:
-        return "ENCAMINHAR_TESTE_GENETICO"
+def gerar_recomendacao(score, sexo):
+    #valor com base no artigo
+    if sexo == "M":
+        limiar = 0.56
     else:
-        return "NAO_ENCAMINHAR"
+        limiar = 0.55
+    
+    if score >= limiar:
+        return "ENCAMINHAR_TESTE_GENETICO"
+    
+    return "NAO_ENCAMINHAR"
+    
 
 def salvar_triagem(id_paciente, observacoes, sexo, score, recomendacao, sintomas):
     conexao = conectar_banco()
@@ -166,6 +172,8 @@ def buscar_triagem_por_id(id_triagem):
     conexao.close()
 
     return triagem
+
+
 def buscar_historico_triagens(id_profissional=None, is_admin=0):
     conexao = conectar_banco()
     cursor = conexao.cursor(dictionary=True)
@@ -225,6 +233,7 @@ def buscar_historico_triagens(id_profissional=None, is_admin=0):
 
     return resultado
 
+
 def vincular_profissional_triagem(id_triagem, id_profissional):
     conexao = conectar_banco()
     cursor = conexao.cursor()
@@ -247,3 +256,31 @@ def vincular_profissional_triagem(id_triagem, id_profissional):
 
     cursor.close()
     conexao.close()
+
+
+def usuario_pode_acessar_triagem(id_triagem, usuario):
+    if usuario.get("is_admin") == 1:
+        return True
+
+    id_profissional = usuario.get("id_profissional")
+
+    if not id_profissional:
+        return False
+
+    conexao = conectar_banco()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        SELECT 1
+        FROM Triagem_Profissional
+        WHERE id_triagem_FK = %s
+          AND id_profissional_FK = %s
+        LIMIT 1
+    """, (id_triagem, id_profissional))
+
+    resultado = cursor.fetchone()
+
+    cursor.close()
+    conexao.close()
+
+    return resultado is not None

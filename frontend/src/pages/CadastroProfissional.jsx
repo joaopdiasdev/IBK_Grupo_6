@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { Link } from "react-router-dom";
-import {FaUserInjured, FaClipboardList, FaNotesMedical, FaUserMd} from "react-icons/fa";
+import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUserMd } from "react-icons/fa";
 import api from "../services/api";
 import logoInstituto from "../assets/logo-IBK-branco.png";
 import "./CadastroProfissional.css";
@@ -13,26 +13,27 @@ function CadastroProfissional() {
     especialidade: ""
   });
 
-  const handleChange = (e) => {
+  function atualizarCampo(evento) {
+    const nomeDoCampo = evento.target.name;
+    const valorDoCampo = evento.target.value;
+
     setProfissional({
       ...profissional,
-      [e.target.name]: e.target.value
+      [nomeDoCampo]: valorDoCampo
     });
-  };
+  }
 
-  const cadastrarProfissional = async (e) => {
-    e.preventDefault();
+  async function cadastrarProfissional(evento) {
+    evento.preventDefault();
 
     try {
-      const resposta = await api.post("/profissionais", profissional);
-
-      console.log(resposta.data);
+      await api.post("/profissionais", profissional);
       alert("Profissional cadastrado com sucesso!");
     } catch (erro) {
       console.error("Erro ao cadastrar profissional:", erro);
       alert("Erro ao cadastrar profissional");
     }
-  };
+  }
 
   return (
     <div className="cadastro-page">
@@ -40,12 +41,12 @@ function CadastroProfissional() {
         <div className="sidebar-menu">
           <Link to="/pacientes" className="sidebar-item">
             <FaUserInjured />
-            <span>pacientes</span>
+            <span>Pacientes</span>
           </Link>
 
           <Link to="/historico" className="sidebar-item">
             <FaClipboardList />
-            <span>Histórico</span>
+            <span>Historico</span>
           </Link>
 
           <Link to="/nova-triagem" className="sidebar-item">
@@ -68,13 +69,13 @@ function CadastroProfissional() {
         <section className="cadastro-area">
           <div className="cadastro-titulo">
             <h1>CADASTRO PROFISSIONAL</h1>
-            <p>Cadastre profissionais de saúde para acesso ao sistema de triagem.</p>
+            <p>Cadastre profissionais de saude para acesso ao sistema de triagem.</p>
           </div>
 
           <div className="cadastro-card">
             <div className="cadastro-card-header">
               <h2>Dados do Profissional</h2>
-              <p>Preencha as informações abaixo para criar um novo acesso.</p>
+              <p>Preencha as informacoes abaixo para criar um novo acesso.</p>
             </div>
 
             <form onSubmit={cadastrarProfissional} className="form-profissional">
@@ -84,7 +85,7 @@ function CadastroProfissional() {
                   name="nome"
                   placeholder="Digite o nome completo"
                   value={profissional.nome}
-                  onChange={handleChange}
+                  onChange={atualizarCampo}
                 />
               </div>
 
@@ -95,7 +96,7 @@ function CadastroProfissional() {
                   type="email"
                   placeholder="Digite o email"
                   value={profissional.email}
-                  onChange={handleChange}
+                  onChange={atualizarCampo}
                 />
               </div>
 
@@ -106,7 +107,7 @@ function CadastroProfissional() {
                   type="password"
                   placeholder="Digite a senha"
                   value={profissional.senha}
-                  onChange={handleChange}
+                  onChange={atualizarCampo}
                 />
               </div>
 
@@ -115,16 +116,16 @@ function CadastroProfissional() {
                 <select
                   name="especialidade"
                   value={profissional.especialidade}
-                  onChange={handleChange}
+                  onChange={atualizarCampo}
                 >
                   <option value="">Selecione a especialidade</option>
-                  <option value="MÉDICO(A)">Médico(a)</option>
+                  <option value="MÃ‰DICO(A)">Medico(a)</option>
                   <option value="ENFERMEIRO(A)">Enfermeiro(a)</option>
                 </select>
               </div>
 
               <div className="cadastro-footer">
-                <p>Após cadastrar, o profissional poderá acessar o sistema pelo login.</p>
+                <p>Apos cadastrar, o profissional podera acessar o sistema pelo login.</p>
 
                 <button type="submit" className="btn-cadastrar">
                   Cadastrar

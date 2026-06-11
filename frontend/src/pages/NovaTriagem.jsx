@@ -1,68 +1,70 @@
-import { useState, useEffect } from "react";
-import api from "../services/api";
-import { useNavigate, Link } from "react-router-dom";
+import { useEffect, useState } from "react";
+import { Link, useNavigate } from "react-router-dom";
+import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUser } from "react-icons/fa";
 import FormPaciente from "../components/FormPaciente";
 import ListaSintomas from "../components/ListaSintomas";
-import "./NovaTriagem.css";
+import api from "../services/api";
 import logoInstituto from "../assets/logo-IBK-branco.png";
-import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUser } from "react-icons/fa";
+import "./NovaTriagem.css";
 
+function buscarUsuarioSalvo() {
+  const usuarioSalvo = localStorage.getItem("usuario");
 
+  if (!usuarioSalvo) {
+    return {};
+  }
+
+  return JSON.parse(usuarioSalvo);
+}
 
 function NovaTriagem() {
-
   const navigate = useNavigate();
-  const isAdmin = JSON.parse(localStorage.getItem("usuario") || "{}").is_admin === 1;
+
+  const usuario = buscarUsuarioSalvo();
+  const isAdmin = usuario.is_admin === 1;
 
   const [paciente, setPaciente] = useState({});
-
   const [sintomasSelecionados, setSintomasSelecionados] = useState([]);
-
   const [sintomas, setSintomas] = useState([]);
-
   const [observacoes, setObservacoes] = useState("");
 
   useEffect(() => {
-  const usuario = localStorage.getItem("usuario");
+    const usuarioSalvo = localStorage.getItem("usuario");
 
-  if (!usuario) {
-    navigate("/");
-    return;
-  }
+    if (!usuarioSalvo) {
+      navigate("/");
+      return;
+    }
 
-  async function carregarSintomas() {
+    async function carregarSintomas() {
+      try {
+        const resposta = await api.get("/sintomas");
+        setSintomas(resposta.data);
+      } catch (erro) {
+        console.error("Erro ao buscar sintomas:", erro);
+      }
+    }
+
+    carregarSintomas();
+  }, [navigate]);
+
+  async function salvarTriagem() {
+    const dadosDaTriagem = {
+      paciente: paciente,
+      sintomas: sintomasSelecionados,
+      observacoes: observacoes
+    };
+
     try {
-      const resposta = await api.get("/sintomas");
-      setSintomas(resposta.data);
+      const resposta = await api.post("/triagens", dadosDaTriagem);
+
+      navigate("/resultado", {
+        state: resposta.data
+      });
     } catch (erro) {
-      console.error("Erro ao buscar sintomas:", erro);
+      console.error("Erro ao salvar triagem:", erro);
     }
   }
-
-  carregarSintomas();
-}, [navigate]);
-
-
-  
-const salvarTriagem = async () => {
-  try {
-    const usuario = JSON.parse(localStorage.getItem("usuario") || "{}");
-
-    const resposta = await api.post("/triagens", {
-      paciente,
-      sintomas: sintomasSelecionados,
-      observacoes: observacoes,
-      id_profissional: usuario.id_profissional
-    });
-
-    navigate("/resultado", {
-      state: resposta.data
-    });
-
-  } catch (erro) {
-    console.error("Erro:", erro);
-  }
-};
 
   return (
     <div className="layout-sistema">
@@ -75,78 +77,75 @@ const salvarTriagem = async () => {
 
           <Link to="/historico" className="sidebar-item">
             <FaClipboardList />
-            <span>Histórico</span>
+            <span>Historico</span>
           </Link>
 
           <Link to="/nova-triagem" className="sidebar-item active">
             <FaNotesMedical />
             <span>Triagem</span>
           </Link>
+
           {isAdmin && (
             <Link to="/cadastro-profissional" className="sidebar-item">
-              <FaUser /><span>Profissional</span>
+              <FaUser />
+              <span>Profissional</span>
             </Link>
           )}
         </div>
-        
-        
+
         <div className="sidebar-logo">
           <img src={logoInstituto} alt="Logo Instituto" />
         </div>
-
       </aside>
 
-    <main className="conteudo-principal">
-
-      <section className="triagem-area">
-        <div className="triagem-titulo">
-          <h1>TRIAGEM</h1>
-          <p>Preencha os dados do paciente e selecione os sintomas apresentados.</p>
-        </div>
-
-        <div className="triagem-card">
-          <div className="triagem-section">
-            <h2>Dados do Paciente</h2>
-
-            <FormPaciente
-              paciente={paciente}
-              setPaciente={setPaciente}
-            />
+      <main className="conteudo-principal">
+        <section className="triagem-area">
+          <div className="triagem-titulo">
+            <h1>TRIAGEM</h1>
+            <p>Preencha os dados do paciente e selecione os sintomas apresentados.</p>
           </div>
 
-          <div className="triagem-section">
-            <h2>Sintomas</h2>
+          <div className="triagem-card">
+            <div className="triagem-section">
+              <h2>Dados do Paciente</h2>
 
-            <ListaSintomas
-              sintomas={sintomas}
-              sintomasSelecionados={sintomasSelecionados}
-              setSintomasSelecionados={setSintomasSelecionados}
-            />
+              <FormPaciente
+                paciente={paciente}
+                setPaciente={setPaciente}
+              />
+            </div>
+
+            <div className="triagem-section">
+              <h2>Sintomas</h2>
+
+              <ListaSintomas
+                sintomas={sintomas}
+                sintomasSelecionados={sintomasSelecionados}
+                setSintomasSelecionados={setSintomasSelecionados}
+              />
+            </div>
+
+            <div className="triagem-section">
+              <h2>Observacoes do Medico</h2>
+
+              <textarea
+                className="campo-observacoes"
+                placeholder="Digite observacoes relevantes sobre o paciente, sintomas ou atendimento..."
+                value={observacoes}
+                onChange={(evento) => setObservacoes(evento.target.value)}
+              />
+            </div>
+
+            <div className="triagem-footer">
+              <p>Sintomas selecionados: {sintomasSelecionados.length}</p>
+
+              <button className="btn-salvar" onClick={salvarTriagem}>
+                Salvar Triagem
+              </button>
+            </div>
           </div>
-
-          <div className="triagem-section">
-            <h2>Observações do Médico</h2>
-
-            <textarea
-              className="campo-observacoes"
-              placeholder="Digite observações relevantes sobre o paciente, sintomas ou atendimento..."
-              value={observacoes}
-              onChange={(e) => setObservacoes(e.target.value)}
-            />
-          </div>
-
-          <div className="triagem-footer">
-            <p>
-              Sintomas selecionados: {sintomasSelecionados.length}
-            </p>
-
-            <button className="btn-salvar" onClick={salvarTriagem}>
-              Salvar Triagem
-            </button>
-          </div>
-        </div>
-      </section>
-    </main>
+        </section>
+      </main>
     </div>
   );
 }
