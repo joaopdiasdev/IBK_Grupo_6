@@ -4,10 +4,8 @@ import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUser } from "react-ic
 import api from "../services/api";
 import logoInstituto from "../assets/logo-IBK-branco.png";
 import "./HistoricoTriagem.css";
-<<<<<<< HEAD
 import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUser } from "react-icons/fa";
 import BotaoRelatorio from "../components/BotaoRelatorio";
-=======
 
 function buscarUsuarioSalvo() {
   const usuarioSalvo = localStorage.getItem("usuario");
@@ -18,7 +16,6 @@ function buscarUsuarioSalvo() {
 
   return JSON.parse(usuarioSalvo);
 }
->>>>>>> origin/feature/tiago-database
 
 function formatarData(data) {
   return new Date(data).toLocaleDateString("pt-BR");
