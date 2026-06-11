@@ -4,7 +4,7 @@ def conectar_banco():
     return mysql.connector.connect(
         host="127.0.0.1",
         user="root",
-        password="2811o1604@FELIPE",
+        password="Victor@20071208",
         database="banco_ibk",
         port=3306
     )
