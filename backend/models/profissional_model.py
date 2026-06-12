@@ -35,7 +35,7 @@ def cadastrar_profissional(nome, email, senha, especialidade):
 
     cursor.execute("""
         INSERT INTO Pessoa (nome, email, senha, is_admin)
-        VALUES (%s, %s, %s, 1)
+        VALUES (%s, %s, %s, 0)
         """, (nome, email, senha_hash))
 
     id_pessoa = cursor.lastrowid
@@ -55,4 +55,4 @@ def cadastrar_profissional(nome, email, senha, especialidade):
     cursor.close()
     conexao.close()
 
-    return id_profissional
+    return {"sucesso": True, "id_profissional": id_profissional}
