@@ -81,7 +81,7 @@ def gerar_relatorio(id_triagem):
         ),
         Paragraph(f"<b>Responsavel:</b> {triagem.get('nome_responsavel') or '-'}", normal),
         Paragraph(
-            f"<b>Doutor responsavel pela triagem:</b> "
+            f"<b>Responsavel pela triagem:</b> "
             f"{triagem.get('nome_doutor_responsavel') or '-'}",
             normal
         ),

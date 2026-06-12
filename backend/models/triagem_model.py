@@ -1,5 +1,15 @@
 from dataBase.conexao import conectar_banco
 
+
+def _formatar_data_triagem(triagem):
+    data_triagem = triagem.get("data_triagem")
+
+    if hasattr(data_triagem, "strftime"):
+        triagem["data_triagem"] = data_triagem.strftime("%Y-%m-%dT%H:%M:%S")
+
+    return triagem
+
+
 def buscar_todas_triagens():
     conexao = conectar_banco()
     cursor = conexao.cursor(dictionary=True)
@@ -118,7 +128,7 @@ def buscar_triagem_por_id(id_triagem):
     cursor.execute("""
         SELECT
             t.id_triagem,
-            DATE_FORMAT(t.data_triagem, '%Y-%m-%dT%H:%i:%s') AS data_triagem,
+            t.data_triagem,
             t.observacoes,
             t.score_triagem,
             t.recomendacao,
@@ -167,6 +177,7 @@ def buscar_triagem_por_id(id_triagem):
     sintomas = cursor.fetchall()
 
     triagem["sintomas"] = sintomas
+    _formatar_data_triagem(triagem)
 
     cursor.close()
     conexao.close()
@@ -182,7 +193,7 @@ def buscar_historico_triagens(id_profissional=None, is_admin=0):
         cursor.execute("""
             SELECT
                 t.id_triagem,
-                DATE_FORMAT(t.data_triagem, '%Y-%m-%dT%H:%i:%s') AS data_triagem,
+                t.data_triagem,
                 t.score_triagem,
                 t.recomendacao,
                 t.observacoes,
@@ -203,7 +214,7 @@ def buscar_historico_triagens(id_profissional=None, is_admin=0):
         cursor.execute("""
             SELECT
                 t.id_triagem,
-                DATE_FORMAT(t.data_triagem, '%Y-%m-%dT%H:%i:%s') AS data_triagem,
+                t.data_triagem,
                 t.score_triagem,
                 t.recomendacao,
                 t.observacoes,
@@ -227,6 +238,9 @@ def buscar_historico_triagens(id_profissional=None, is_admin=0):
         """, (id_profissional,))
 
     resultado = cursor.fetchall()
+
+    for triagem in resultado:
+        _formatar_data_triagem(triagem)
 
     cursor.close()
     conexao.close()
