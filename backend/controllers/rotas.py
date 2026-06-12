@@ -4,7 +4,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 from auth import autenticar_requisicao, gerar_token, obter_usuario_autenticado
 from models.paciente_model import buscar_todos_pacientes, cadastrar_paciente
 from models.pessoa_model import buscar_todas_pessoas
-from models.profissional_model import buscar_todos_profissionais, cadastrar_profissional
+from models.profissional_model import buscar_todos_profissionais, cadastrar_profissional, remover_profissional
 from models.sintoma_model import buscar_todos_sintomas
 from models.triagem_model import (
     buscar_historico_triagens,
@@ -345,3 +345,19 @@ def criar_profissional():
 def listar_profissionais():
     profissionais = buscar_todos_profissionais()
     return jsonify(profissionais)
+
+
+@rotas.route("/profissionais/<int:id_profissional>", methods=["DELETE"])
+@autenticar_requisicao(admin_only=True)
+def excluir_profissional(id_profissional):
+    resultado = remover_profissional(id_profissional)
+
+    if resultado["sucesso"] is False:
+        status = STATUS_ACESSO_NEGADO
+
+        if resultado.get("motivo") == "nao_encontrado":
+            status = STATUS_NAO_ENCONTRADO
+
+        return jsonify({"erro": resultado["erro"]}), status
+
+    return jsonify({"mensagem": "Profissional removido com sucesso"})

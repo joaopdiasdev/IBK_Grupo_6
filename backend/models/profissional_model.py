@@ -56,3 +56,54 @@ def cadastrar_profissional(nome, email, senha, especialidade):
     conexao.close()
 
     return {"sucesso": True, "id_profissional": id_profissional}
+
+
+def remover_profissional(id_profissional):
+    conexao = conectar_banco()
+    cursor = conexao.cursor(dictionary=True)
+
+    cursor.execute("""
+        SELECT
+            ps.id_profissional,
+            p.id_pessoa,
+            p.is_admin
+        FROM Profissional_Saude ps
+        JOIN Pessoa p
+            ON ps.id_pessoa_FK = p.id_pessoa
+        WHERE ps.id_profissional = %s
+    """, (id_profissional,))
+
+    profissional = cursor.fetchone()
+
+    if profissional is None:
+        cursor.close()
+        conexao.close()
+        return {
+            "sucesso": False,
+            "erro": "Profissional nao encontrado",
+            "motivo": "nao_encontrado"
+        }
+
+    if profissional["is_admin"] == 1:
+        cursor.close()
+        conexao.close()
+        return {
+            "sucesso": False,
+            "erro": "Nao e possivel remover administradores nesta tela",
+            "motivo": "administrador"
+        }
+
+    cursor.close()
+    cursor = conexao.cursor()
+
+    cursor.execute("""
+        DELETE FROM Pessoa
+        WHERE id_pessoa = %s
+    """, (profissional["id_pessoa"],))
+
+    conexao.commit()
+
+    cursor.close()
+    conexao.close()
+
+    return {"sucesso": True}

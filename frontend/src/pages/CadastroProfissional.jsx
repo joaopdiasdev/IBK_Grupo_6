@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
-import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUserMd } from "react-icons/fa";
+import { FaUserInjured, FaClipboardList, FaNotesMedical, FaUserMd, FaTrash } from "react-icons/fa";
 import api from "../services/api";
 import logoInstituto from "../assets/logo-IBK-branco.png";
 import "./CadastroProfissional.css";
@@ -54,6 +54,25 @@ function CadastroProfissional() {
     } catch (erro) {
       console.error("Erro ao cadastrar profissional:", erro);
       alert("Erro ao cadastrar profissional");
+    }
+  }
+
+  async function removerProfissional(item) {
+    const confirmouRemocao = window.confirm(
+      `Remover o profissional ${item.nome}?`
+    );
+
+    if (!confirmouRemocao) {
+      return;
+    }
+
+    try {
+      await api.delete(`/profissionais/${item.id_profissional}`);
+      await carregarProfissionais();
+      alert("Profissional removido com sucesso!");
+    } catch (erro) {
+      console.error("Erro ao remover profissional:", erro);
+      alert("Erro ao remover profissional");
     }
   }
 
@@ -174,6 +193,7 @@ function CadastroProfissional() {
                       <th>Email</th>
                       <th>Especialidade</th>
                       <th>Perfil</th>
+                      <th>Acoes</th>
                     </tr>
                   </thead>
 
@@ -185,6 +205,21 @@ function CadastroProfissional() {
                         <td>{item.email}</td>
                         <td>{item.especialidade}</td>
                         <td>{item.is_admin === 1 ? "Administrador" : "Profissional"}</td>
+                        <td>
+                          <button
+                            type="button"
+                            className="btn-remover-profissional"
+                            onClick={() => removerProfissional(item)}
+                            disabled={item.is_admin === 1}
+                            title={
+                              item.is_admin === 1
+                                ? "Administradores nao podem ser removidos nesta tela"
+                                : "Remover profissional"
+                            }
+                          >
+                            <FaTrash />
+                          </button>
+                        </td>
                       </tr>
                     ))}
                   </tbody>
