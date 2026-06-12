@@ -114,33 +114,35 @@ function Pacientes() {
             </div>
           </div>
 
-          <input
-            placeholder="Buscar por nome..."
-            value={busca}
-            onChange={(e) => setBusca(e.target.value)}
-            className="campo-busca"
-          />
+          <div className="filtros-pacientes">
+            <input
+              placeholder="Buscar por nome..."
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              className="campo-busca"
+            />
 
-          <select
-            value={filtroSexo}
-            onChange={(e) => setFiltroSexo(e.target.value)}
-            className="campo-busca"
-          >
-            <option value="TODOS">Todos os sexos</option>
-            <option value="M">Masculino</option>
-            <option value="F">Feminino</option>
-          </select>
+            <select
+              value={filtroSexo}
+              onChange={(e) => setFiltroSexo(e.target.value)}
+              className="campo-busca"
+            >
+              <option value="TODOS">Todos os sexos</option>
+              <option value="M">Masculino</option>
+              <option value="F">Feminino</option>
+            </select>
 
-          <select
-            value={filtroIdade}
-            onChange={(e) => setFiltroIdade(e.target.value)}
-            className="campo-busca"
-          >
-            <option value="TODOS">Todas as idades</option>
-            <option value="0-12">0 a 12 anos</option>
-            <option value="13-17">13 a 17 anos</option>
-            <option value="18+">18 anos ou mais</option>
-          </select>
+            <select
+              value={filtroIdade}
+              onChange={(e) => setFiltroIdade(e.target.value)}
+              className="campo-busca"
+            >
+              <option value="TODOS">Todas as idades</option>
+              <option value="0-12">0 a 12 anos</option>
+              <option value="13-17">13 a 17 anos</option>
+              <option value="18+">18 anos ou mais</option>
+            </select>
+          </div>
 
           <div className="pacientes-card">
             {pacientesFiltrados.length === 0 ? (

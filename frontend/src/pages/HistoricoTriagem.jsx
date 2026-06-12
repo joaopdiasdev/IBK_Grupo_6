@@ -123,13 +123,14 @@ function HistoricoTriagem() {
             <p>Consulte as triagens ja realizadas no sistema.</p>
           </div>
 
-          <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
+          <div className="filtros-historico">
             <input
               placeholder="Buscar por paciente..."
               value={busca}
               onChange={(e) => setBusca(e.target.value)}
               className="campo-busca"
             />
+
             <select
               value={filtroRecomendacao}
               onChange={(e) => setFiltroRecomendacao(e.target.value)}

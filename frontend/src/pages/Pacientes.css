@@ -173,3 +173,43 @@ body {
     padding: 32px;
     font-size: 15px;
 }
+
+/*filtros*/
+
+.filtros-pacientes {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 18px;
+  width: 100%;
+  align-items: center;
+}
+
+.campo-busca {
+  height: 44px;
+  border: 1px solid #d5dbea;
+  border-radius: 10px;
+  padding: 0 14px;
+  font-size: 14px;
+  font-family: inherit;
+  background-color: #ffffff;
+  color: #202b5c;
+  outline: none;
+}
+
+.campo-busca:first-child {
+  flex: 1;
+}
+
+.campo-busca:focus {
+  border-color: #202b5c;
+  box-shadow: 0 0 0 3px rgba(32, 43, 92, 0.12);
+}
+
+.campo-busca::placeholder {
+  color: #8a94aa;
+}
+
+select.campo-busca {
+  min-width: 190px;
+  cursor: pointer;
+}
