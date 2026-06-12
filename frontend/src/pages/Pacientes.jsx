@@ -118,13 +118,13 @@ function Pacientes() {
             placeholder="Buscar por nome..."
             value={busca}
             onChange={(e) => setBusca(e.target.value)}
-            className="campo-busca"
+            className="campos-busca"
           />
 
           <select
             value={filtroSexo}
             onChange={(e) => setFiltroSexo(e.target.value)}
-            className="campo-busca"
+            className="campos-busca"
           >
             <option value="TODOS">Todos os sexos</option>
             <option value="M">Masculino</option>
@@ -134,7 +134,7 @@ function Pacientes() {
           <select
             value={filtroIdade}
             onChange={(e) => setFiltroIdade(e.target.value)}
-            className="campo-busca"
+            className="campos-busca"
           >
             <option value="TODOS">Todas as idades</option>
             <option value="0-12">0 a 12 anos</option>

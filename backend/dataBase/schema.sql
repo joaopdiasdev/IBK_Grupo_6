@@ -1,5 +1,8 @@
 /* Criação do  SCHEMA de tabelas para estruturação do banco */
 
+CREATE DATABASE IF NOT EXISTS banco_ibk;
+USE banco_ibk;
+
 -- 1. Criação da tabela Pessoa
 CREATE TABLE Pessoa (
     id_pessoa INT AUTO_INCREMENT PRIMARY KEY,

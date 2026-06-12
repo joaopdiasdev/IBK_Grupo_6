@@ -173,3 +173,49 @@ body {
     padding: 32px;
     font-size: 15px;
 }
+
+/*filtros*/
+
+.pacientes-container {
+    max-width: 1050px;
+    width: 100%;
+    margin: 0 auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    column-gap: 12px;
+}
+
+.pacientes-header {
+    grid-column: 1 / -1;
+}
+
+.pacientes-card {
+    grid-column: 1 / -1;
+}
+
+.campos-busca {
+    width: 100%;
+    height: 44px;
+    border: 1px solid #d5dbea;
+    border-radius: 10px;
+    padding: 0 14px;
+    font-size: 14px;
+    font-family: inherit;
+    background-color: #ffffff;
+    color: #202b5c;
+    outline: none;
+    margin-bottom: 18px;
+}
+
+.campos-busca:focus {
+    border-color: #202b5c;
+    box-shadow: 0 0 0 3px rgba(32, 43, 92, 0.12);
+}
+
+.campos-busca::placeholder {
+    color: #8a94aa;
+}
+
+select.campos-busca {
+    cursor: pointer;
+}
