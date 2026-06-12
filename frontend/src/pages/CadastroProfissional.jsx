@@ -119,7 +119,7 @@ function CadastroProfissional() {
                   onChange={atualizarCampo}
                 >
                   <option value="">Selecione a especialidade</option>
-                  <option value="MÃ‰DICO(A)">Medico(a)</option>
+                  <option value="MÉDICO(A)">Medico(a)</option>
                   <option value="ENFERMEIRO(A)">Enfermeiro(a)</option>
                 </select>
               </div>

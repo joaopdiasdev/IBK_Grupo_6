@@ -34,6 +34,29 @@ function calcularIdade(dataNascimento) {
 function Pacientes() {
   const [pacientes, setPacientes] = useState([]);
 
+  const [busca, setBusca] = useState("");
+  const [filtroSexo, setFiltroSexo] = useState("TODOS");
+  const [filtroIdade, setFiltroIdade] = useState("TODOS");
+
+  const pacientesFiltrados = pacientes.filter((paciente) => {
+    const nomeDoPaciente = (paciente.nome || "").toLowerCase();
+    const termoDeBusca = busca.toLowerCase();
+
+    const passouNaBusca = nomeDoPaciente.includes(termoDeBusca);
+    const passouNoSexo = filtroSexo === "TODOS" || paciente.sexo_referencia_clinica === filtroSexo;
+
+    const idadeDoPaciente = calcularIdade(paciente.data_nascimento);
+    const passouNaIdade =
+      filtroIdade === "TODOS" ||
+      (filtroIdade === "0-12" && idadeDoPaciente <= 12) ||
+      (filtroIdade === "13-17" && idadeDoPaciente >= 13 && idadeDoPaciente <= 17) ||
+      (filtroIdade === "18+" && idadeDoPaciente >= 18);
+
+    return passouNaBusca && passouNoSexo && passouNaIdade;
+  });
+
+
+
   const usuario = buscarUsuarioSalvo();
   const isAdmin = usuario.is_admin === 1;
 
@@ -91,8 +114,36 @@ function Pacientes() {
             </div>
           </div>
 
+          <input
+            placeholder="Buscar por nome..."
+            value={busca}
+            onChange={(e) => setBusca(e.target.value)}
+            className="campo-busca"
+          />
+
+          <select
+            value={filtroSexo}
+            onChange={(e) => setFiltroSexo(e.target.value)}
+            className="campo-busca"
+          >
+            <option value="TODOS">Todos os sexos</option>
+            <option value="M">Masculino</option>
+            <option value="F">Feminino</option>
+          </select>
+
+          <select
+            value={filtroIdade}
+            onChange={(e) => setFiltroIdade(e.target.value)}
+            className="campo-busca"
+          >
+            <option value="TODOS">Todas as idades</option>
+            <option value="0-12">0 a 12 anos</option>
+            <option value="13-17">13 a 17 anos</option>
+            <option value="18+">18 anos ou mais</option>
+          </select>
+
           <div className="pacientes-card">
-            {pacientes.length === 0 ? (
+            {pacientesFiltrados.length === 0 ? (
               <p className="pacientes-vazio">Nenhum paciente cadastrado.</p>
             ) : (
               <div className="tabela-wrapper">
@@ -110,7 +161,7 @@ function Pacientes() {
                   </thead>
 
                   <tbody>
-                    {pacientes.map((paciente) => {
+                    {pacientesFiltrados.map((paciente) => {
                       const idadeDoPaciente = calcularIdade(paciente.data_nascimento);
                       const nomeResponsavel = paciente.nome_responsavel || "-";
 

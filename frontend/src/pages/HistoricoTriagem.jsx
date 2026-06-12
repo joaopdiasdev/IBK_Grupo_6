@@ -31,6 +31,18 @@ function HistoricoTriagem() {
   const [triagens, setTriagens] = useState([]);
   const [triagemAberta, setTriagemAberta] = useState(null);
 
+  const [busca, setBusca] = useState("");
+  const [filtroRecomendacao, setFiltroRecomendacao] = useState("TODOS");
+  const triagensFiltradas = triagens.filter((triagem) => {
+    const nomeDoPaciente = (triagem.nome || "").toLowerCase();
+    const termoDeBusca = busca.toLowerCase();
+
+    const passouNaBusca = nomeDoPaciente.includes(termoDeBusca);
+    const passouNoFiltro = filtroRecomendacao === "TODOS" || triagem.recomendacao === filtroRecomendacao;
+
+    return passouNaBusca && passouNoFiltro;
+  });
+
   const usuario = buscarUsuarioSalvo();
   const isAdmin = usuario.is_admin === 1;
 
@@ -111,8 +123,26 @@ function HistoricoTriagem() {
             <p>Consulte as triagens ja realizadas no sistema.</p>
           </div>
 
+          <div style={{ display: "flex", gap: 10, marginBottom: 16 }}>
+            <input
+              placeholder="Buscar por paciente..."
+              value={busca}
+              onChange={(e) => setBusca(e.target.value)}
+              className="campo-busca"
+            />
+            <select
+              value={filtroRecomendacao}
+              onChange={(e) => setFiltroRecomendacao(e.target.value)}
+              className="campo-busca"
+            >
+              <option value="TODOS">Todas as recomendações</option>
+              <option value="ENCAMINHAR_TESTE_GENETICO">Encaminhar</option>
+              <option value="NAO_ENCAMINHAR">Não Encaminhar</option>
+            </select>
+          </div>
+
           <div className="historico-card">
-            {triagens.length === 0 ? (
+            {triagensFiltradas.length === 0 ? (
               <p className="historico-vazio">Nenhuma triagem registrada.</p>
             ) : (
               <div className="tabela-wrapper">
@@ -131,7 +161,7 @@ function HistoricoTriagem() {
                   </thead>
 
                   <tbody>
-                    {triagens.map((triagem) => {
+                    {triagensFiltradas.map((triagem) => {
                       const observacoesAbertas = triagemAberta === triagem.id_triagem;
 
                       return (
