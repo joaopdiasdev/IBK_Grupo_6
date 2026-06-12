@@ -118,7 +118,7 @@ def buscar_triagem_por_id(id_triagem):
     cursor.execute("""
         SELECT
             t.id_triagem,
-            t.data_triagem,
+            DATE_FORMAT(t.data_triagem, '%Y-%m-%dT%H:%i:%s') AS data_triagem,
             t.observacoes,
             t.score_triagem,
             t.recomendacao,
@@ -182,7 +182,7 @@ def buscar_historico_triagens(id_profissional=None, is_admin=0):
         cursor.execute("""
             SELECT
                 t.id_triagem,
-                t.data_triagem,
+                DATE_FORMAT(t.data_triagem, '%Y-%m-%dT%H:%i:%s') AS data_triagem,
                 t.score_triagem,
                 t.recomendacao,
                 t.observacoes,
@@ -203,7 +203,7 @@ def buscar_historico_triagens(id_profissional=None, is_admin=0):
         cursor.execute("""
             SELECT
                 t.id_triagem,
-                t.data_triagem,
+                DATE_FORMAT(t.data_triagem, '%Y-%m-%dT%H:%i:%s') AS data_triagem,
                 t.score_triagem,
                 t.recomendacao,
                 t.observacoes,
