@@ -1,8 +1,7 @@
 from flask import Blueprint, jsonify, request
-from models.profissional_model import cadastrar_profissional
-from werkzeug.security import check_password_hash
+from werkzeug.security import check_password_hash, generate_password_hash
 
-# mudança geral para o projeto ficar mais organizado utilizando MVC
+from models.profissional_model import buscar_todos_profissionais, cadastrar_profissional
 from models.sintoma_model import buscar_todos_sintomas
 from models.paciente_model import (
     buscar_todos_pacientes,
@@ -221,3 +220,9 @@ def criar_profissional():
         "mensagem": "Profissional cadastrado com sucesso",
         "id_profissional": id_profissional
     })
+
+
+@rotas.route("/profissionais", methods=["GET"])
+def listar_profissionais():
+    profissionais = buscar_todos_profissionais()
+    return jsonify(profissionais)

@@ -120,6 +120,15 @@ body {
     box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
 }
 
+.profissionais-card {
+    background-color: #ffffff;
+    border: 1px solid #e5e7eb;
+    border-radius: 18px;
+    padding: 32px;
+    margin-top: 28px;
+    box-shadow: 0 12px 32px rgba(15, 23, 42, 0.08);
+}
+
 .cadastro-card-header {
     margin-bottom: 28px;
 }
@@ -207,4 +216,62 @@ body {
 
 .btn-cadastrar:hover {
     background-color: #31458a;
+}
+
+.profissionais-vazio {
+    margin: 0;
+    color: #6b7280;
+    font-size: 14px;
+}
+
+.tabela-wrapper {
+    width: 100%;
+    overflow-x: auto;
+}
+
+.profissionais-table {
+    width: 100%;
+    border-collapse: collapse;
+    min-width: 720px;
+}
+
+.profissionais-table th,
+.profissionais-table td {
+    padding: 14px 16px;
+    border-bottom: 1px solid #e5e7eb;
+    text-align: left;
+    font-size: 14px;
+    color: #374151;
+}
+
+.profissionais-table th {
+    background-color: #f9fafb;
+    color: #111827;
+    font-weight: 800;
+}
+
+.profissionais-table tr:last-child td {
+    border-bottom: none;
+}
+
+.nome-profissional {
+    color: #111827;
+    font-weight: 700;
+}
+
+@media (max-width: 900px) {
+    .cadastro-content {
+        padding: 48px 24px;
+    }
+
+    .form-profissional {
+        grid-template-columns: 1fr;
+    }
+
+    .cadastro-footer {
+        grid-column: span 1;
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 16px;
+    }
 }

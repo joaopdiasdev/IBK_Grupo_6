@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import {FaUserInjured, FaClipboardList, FaNotesMedical, FaUserMd} from "react-icons/fa";
 import api from "../services/api";
@@ -6,6 +6,7 @@ import logoInstituto from "../assets/logo-IBK-branco.png";
 import "./CadastroProfissional.css";
 
 function CadastroProfissional() {
+  const [profissionais, setProfissionais] = useState([]);
   const [profissional, setProfissional] = useState({
     nome: "",
     email: "",
@@ -13,20 +14,42 @@ function CadastroProfissional() {
     especialidade: ""
   });
 
-  const handleChange = (e) => {
+  async function carregarProfissionais() {
+    try {
+      const resposta = await api.get("/profissionais");
+      setProfissionais(resposta.data);
+    } catch (erro) {
+      console.error("Erro ao carregar profissionais:", erro);
+    }
+  }
+
+  useEffect(() => {
+    carregarProfissionais();
+  }, []);
+
+  function atualizarCampo(evento) {
+    const nomeDoCampo = evento.target.name;
+    const valorDoCampo = evento.target.value;
+
     setProfissional({
       ...profissional,
-      [e.target.name]: e.target.value
+      [nomeDoCampo]: valorDoCampo
     });
-  };
+  }
 
   const cadastrarProfissional = async (e) => {
     e.preventDefault();
 
     try {
-      const resposta = await api.post("/profissionais", profissional);
+      await api.post("/profissionais", profissional);
+      await carregarProfissionais();
+      setProfissional({
+        nome: "",
+        email: "",
+        senha: "",
+        especialidade: ""
+      });
 
-      console.log(resposta.data);
       alert("Profissional cadastrado com sucesso!");
     } catch (erro) {
       console.error("Erro ao cadastrar profissional:", erro);
@@ -84,7 +107,7 @@ function CadastroProfissional() {
                   name="nome"
                   placeholder="Digite o nome completo"
                   value={profissional.nome}
-                  onChange={handleChange}
+                  onChange={atualizarCampo}
                 />
               </div>
 
@@ -95,7 +118,7 @@ function CadastroProfissional() {
                   type="email"
                   placeholder="Digite o email"
                   value={profissional.email}
-                  onChange={handleChange}
+                  onChange={atualizarCampo}
                 />
               </div>
 
@@ -106,7 +129,7 @@ function CadastroProfissional() {
                   type="password"
                   placeholder="Digite a senha"
                   value={profissional.senha}
-                  onChange={handleChange}
+                  onChange={atualizarCampo}
                 />
               </div>
 
@@ -115,7 +138,7 @@ function CadastroProfissional() {
                 <select
                   name="especialidade"
                   value={profissional.especialidade}
-                  onChange={handleChange}
+                  onChange={atualizarCampo}
                 >
                   <option value="">Selecione a especialidade</option>
                   <option value="MÉDICO(A)">Médico(a)</option>
@@ -131,6 +154,43 @@ function CadastroProfissional() {
                 </button>
               </div>
             </form>
+          </div>
+
+          <div className="profissionais-card">
+            <div className="cadastro-card-header">
+              <h2>Profissionais cadastrados</h2>
+              <p>Lista de profissionais de saude com acesso ao sistema.</p>
+            </div>
+
+            {profissionais.length === 0 ? (
+              <p className="profissionais-vazio">Nenhum profissional cadastrado.</p>
+            ) : (
+              <div className="tabela-wrapper">
+                <table className="profissionais-table">
+                  <thead>
+                    <tr>
+                      <th>ID</th>
+                      <th>Nome</th>
+                      <th>Email</th>
+                      <th>Especialidade</th>
+                      <th>Perfil</th>
+                    </tr>
+                  </thead>
+
+                  <tbody>
+                    {profissionais.map((item) => (
+                      <tr key={item.id_profissional}>
+                        <td>{item.id_profissional}</td>
+                        <td className="nome-profissional">{item.nome}</td>
+                        <td>{item.email}</td>
+                        <td>{item.especialidade}</td>
+                        <td>{item.is_admin === 1 ? "Administrador" : "Profissional"}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+              </div>
+            )}
           </div>
         </section>
       </main>
