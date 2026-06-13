@@ -199,7 +199,7 @@ O sistema abrirá automaticamente em `http://localhost:3000`.
 
 ## 📜 Licença
 
-> 🚧 Em breve.
+Este projeto está sob a licença **MIT**. Consulte o arquivo [LICENSE](./LICENSE) para mais detalhes.
 
 ---
 
