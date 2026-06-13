@@ -119,8 +119,8 @@ Abra o **MySQL Workbench**, crie o banco e execute os scripts na ordem:
 CREATE DATABASE banco_ibk;
 ```
 
-- Abra `dataBase/schema.sql` → Execute com **Ctrl + Shift + Enter**
-- Abra `dataBase/dados_iniciais.sql` → Execute com **Ctrl + Shift + Enter**
+- Abra `backend/dataBase/schema.sql` → Execute com **Ctrl + Shift + Enter**
+- Abra `backend/dataBase/dados_iniciais.sql` → Execute com **Ctrl + Shift + Enter**
 
 Edite o arquivo `backend/dataBase/conexao.py` com sua senha do MySQL:
 
